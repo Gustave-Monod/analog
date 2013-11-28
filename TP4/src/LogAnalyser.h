@@ -22,7 +22,7 @@
 //------------------------------------------------------------------ Types
 typedef std::map<LinkUriReferer, unsigned int> THitsByLink;
 
-typedef std::pair<std::string, int> TUriAndHits;
+typedef std::pair<std::string, int> TUriAndRefererHits;
 
 // Pour trier la file à priorité, on définit un foncteur:
 class UriAndHitsGreater
@@ -30,12 +30,12 @@ class UriAndHitsGreater
 public:
 	// On trie le plus souvent en ordre inverse pour pouvoir enlever
 	// les éléments avec le nombre de hits le plus bas.
-	UriAndHitsGreater ( const bool descending = true )
+	UriAndHitsGreater ( const bool descending = false )
 			: mDescending( descending )
 	{
 	}
 
-	bool operator () ( const TUriAndHits & rA, const TUriAndHits &rB ) const
+	bool operator () ( const TUriAndRefererHits & rA, const TUriAndRefererHits &rB ) const
 	{
 		return mDescending ?
 				( rA.second > rB.second ) : ( rA.second < rB.second );
@@ -44,7 +44,7 @@ protected:
 	bool mDescending;
 };
 
-typedef std::priority_queue<TUriAndHits, std::vector<TUriAndHits>,
+typedef std::priority_queue<TUriAndRefererHits, std::vector<TUriAndRefererHits>,
 		UriAndHitsGreater> TPriorityQueue;
 
 //------------------------------------------------------------------------ 
@@ -111,6 +111,8 @@ protected:
 	TPriorityQueue mUrisByHits;
 
 	static const std::vector<std::string> EXCLUDE_LIST;
+
+	static unsigned int const DEFAULT_RESULT_SIZE;
 };
 
 //--------------------------- Autres définitions dépendantes de <LogAnalyser>

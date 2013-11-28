@@ -27,8 +27,12 @@
 struct LinkUriReferer
 {
 //----------------------------------------------------------------- PUBLIC
+	static const char SEPARATOR = ' ';
 
+    std::string Uri;
+    std::string Referer;
 public:
+
 //----------------------------------------------------- Méthodes publiques
 
 //------------------------------------------------- Surcharge d'opérateurs
@@ -41,7 +45,7 @@ public:
 
 //-------------------------------------------- Constructeurs - destructeur
 
-	LinkUriReferer ( std::string const uri, std::string const referer );
+	LinkUriReferer ( std::string const uriParam, std::string const refererParam );
     // Mode d'emploi :
     // Construit un lien entre URI et Referer à partir de deux std::string.
 
@@ -55,11 +59,8 @@ public:
 protected:
 //----------------------------------------------------- Méthodes protégées
 
-	static const char SEPARATOR = ' ';
 //----------------------------------------------------- Attributs protégés
 
-    std::string mUri;
-    std::string mReferer;
 };
 
 //--------------------------- Autres définitions dépendantes de <LinkUriReferer>
