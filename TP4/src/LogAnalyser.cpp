@@ -48,6 +48,7 @@ void LogAnalyser::Analyse ( )
 		if ( it == mHits.begin( ) )
 		{
 			pair = make_pair( it->first.Uri, it->second );
+			continue;
 		}
 
 		// Ensuite, on augmente le nombre de hits totaux pour des URI égales
