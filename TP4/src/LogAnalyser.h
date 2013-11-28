@@ -13,14 +13,15 @@
 #include <map>
 
 #include "LogEntry.h"
+#include "LinkUriReferer.h"
 
 //------------------------------------------------------------- Constantes 
 
 //------------------------------------------------------------------ Types 
-// TODO : définir notre propre structure de donnée, dans laquelle on redéfinit
+// DONE : définir notre propre structure de donnée, dans laquelle on redéfinit
 // l'opérateur < (pour le tri à l'insertion dans la map)
-typedef std::pair<std::string, std::string> TLinkUriReferer;
-typedef std::map<TLinkUriReferer, unsigned int> THitsByLink;
+// typedef std::pair<std::string, std::string> TLinkUriReferer;
+typedef std::map<LinkUriReferer, unsigned int> THitsByLink;
 
 //------------------------------------------------------------------------ 
 // Rôle de la classe <LogAnalyser>
@@ -50,11 +51,10 @@ public:
     // Contrat :
     //
 
-    virtual ~LogAnalyser ( );
+    /* pas virtual <=> pas d'allocation dynamique ici */
+    ~LogAnalyser ( );
     // Mode d'emploi :
-    //
-    // Contrat :
-    //
+    // Trace la destruction.
 
 //------------------------------------------------------------------ PRIVE 
 

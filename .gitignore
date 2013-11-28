@@ -1,9 +1,9 @@
 TP4/Debug/*
 Tests0.2.tgz
 testsProf/
-
-*.o
-*.mk
+.~lock*
+.DS-Store
+*~
 
 
 # Eclipse .gitignore

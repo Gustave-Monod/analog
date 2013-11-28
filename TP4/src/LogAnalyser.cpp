@@ -52,16 +52,15 @@ LogAnalyser::~LogAnalyser ( )
 void LogAnalyser::addHit ( LogEntry & e )
 {
 	// On cherche le couple uri <- referer
-	THitsByLink::iterator it = mHits.find(
-			make_pair( e.uri, e.referer ) );
+	THitsByLink::iterator it = mHits.find( LinkUriReferer( e.uri, e.referer ) );
 	// S'il n'existe pas, on l'insère
 	if ( it == mHits.end( ) )
 	{
-		mHits.insert( make_pair( make_pair( e.uri, e.referer ), 1u ) );
+		mHits.insert( make_pair( LinkUriReferer( e.uri, e.referer ), 1u ) );
 	}
 	// Sinon, on incrémente le nombre de hits
 	else
 	{
-		++(it->second);
+		++( it->second );
 	}
 }
