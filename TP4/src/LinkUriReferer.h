@@ -55,6 +55,7 @@ public:
 protected:
 //----------------------------------------------------- Méthodes protégées
 
+	static const char SEPARATOR = ' ';
 //----------------------------------------------------- Attributs protégés
 
     std::string mUri;

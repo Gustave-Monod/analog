@@ -10,23 +10,23 @@
 //-------------------------------------------------------- Include système
 using namespace std;
 #include <iostream>
-//#include <iomanip>
 #include <sstream>
-#include <algorithm>
 
 //------------------------------------------------------ Include personnel
 #include "ApacheLogParser.h"
 
 //------------------------------------------------------------- Constantes
-string theExtensions[] = { "jpg", "jpeg", "png", "gif", "bmp", "js", "css",
-		"mp3", "aac", "flac", "wav", "ogg", "mp4", "mov", "m4v", "flv", "3gp",
-		"svg" };
-const vector<string> ApacheLogParser::EXCLUDE_LIST( theExtensions,
-		theExtensions + 18 );
 
 //----------------------------------------------------------------- PUBLIC
 
 //----------------------------------------------------- Méthodes publiques
+
+bool ApacheLogParser::HasMoreToParse ( )
+{
+	mrInStream >> ws;
+	return mrInStream.good( );
+}
+
 LogEntry ApacheLogParser::ParseLine ( )
 {
 	string ip;
@@ -77,50 +77,53 @@ LogEntry ApacheLogParser::ParseLine ( )
 
 	return LogEntry( ip, logName, authLogName, date, method, uri, protocol,
 			status, size, referer, userAgent );
-} //----- Fin de parseLine
+} //----- Fin de ParseLine
 
-std::vector<LogEntry> ApacheLogParser::ParseToEnd ( )
-{
-	vector<LogEntry> result;
-
-	// On passe les espaces blancs
-	mrInStream >> ws;
-	while ( mrInStream.good( ) )
-	{
-		LogEntry e = ParseLine( );
-		// Si cette ligne est compatible avec les options activées
-		bool doNotFilter = ( !mExcludeResourceFiles && mHourFilter < 0 );
-		if ( doNotFilter
-				|| ( ( mHourFilter < 0 || e.date.hour == mHourFilter )
-						&& ( !mExcludeResourceFiles || hasValidExtension( e ) ) ) )
-		{
-			result.push_back( e );
-		}
-		// On passe les espaces blancs
-		mrInStream >> ws;
-	}
-
-	return result;
-
-} //----- Fin de parseDocument
+//std::vector<LogEntry> ApacheLogParser::ParseToEnd ( )
+//{
+//	vector<LogEntry> result;
+//
+//	// On passe les espaces blancs
+//	mrInStream >> ws;
+//	while ( mrInStream.good( ) )
+//	{
+//		LogEntry e = ParseLine( );
+//		// Si cette ligne est compatible avec les options activées
+//		bool doNotFilter = ( !mExcludeResourceFiles && mHourFilter < 0 );
+//		if ( doNotFilter
+//				|| ( ( mHourFilter < 0 || e.date.hour == mHourFilter )
+//						&& ( !mExcludeResourceFiles || hasValidExtension( e ) ) ) )
+//		{
+//			result.push_back( e );
+//		}
+//		// On passe les espaces blancs
+//		mrInStream >> ws;
+//	}
+//
+//	return result;
+//
+//} //----- Fin de ParseToEnd
 
 //------------------------------------------------- Surcharge d'opérateurs
 
 //-------------------------------------------- Constructeurs - destructeur
-ApacheLogParser::ApacheLogParser ( std::istream& inStream,
-		bool excludeResourceFiles, int hourFilter )
-		: mrInStream( inStream ), mExcludeResourceFiles( excludeResourceFiles ),
-			mHourFilter( hourFilter ) // default constructor
+
+ApacheLogParser::ApacheLogParser ( std::istream & inStream )
+		: mrInStream( inStream )
 {
-}
+#ifdef MAP
+    cout << "Appel au constructeur de <ApacheLogParser>" << endl;
+#endif
+} //----- Fin de ApacheLogParser ( std::istream &, bool, int )
+
+ApacheLogParser::~ApacheLogParser ( )
+{
+#ifdef MAP
+    cout << "Appel au destructeur de <ApacheLogParser>" << endl;
+#endif
+} //----- Fin de ~ApacheLogParser
+
 
 //------------------------------------------------------------------ PRIVE
 
 //----------------------------------------------------- Méthodes protégées
-bool ApacheLogParser::hasValidExtension ( LogEntry& logEntry )
-{
-	// L'extension est valide si on n'arrive pas à la trouver dans
-	// la liste des extensions exclues
-	return find( EXCLUDE_LIST.begin( ), EXCLUDE_LIST.end( ),
-			logEntry.GetUriExtension( ) ) == EXCLUDE_LIST.end( );
-}

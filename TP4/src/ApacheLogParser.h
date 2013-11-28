@@ -10,9 +10,7 @@
 #define APACHELOGPARSER_H_
 
 //--------------------------------------------------- Interfaces utilisées
-#include <istream>
-#include <vector>
-#include <map>
+#include <iostream>
 #include "LogEntry.h"
 
 //------------------------------------------------------------- Constantes 
@@ -20,8 +18,9 @@
 //------------------------------------------------------------------ Types 
 //------------------------------------------------------------------------ 
 // Rôle de la classe <ApacheLogParser>
-//
-//
+// Lit le flux d'entrée passé en paramètre et en extrait les informations
+// pour les mettre dans une LogEntry.
+// Note : pas d'allocation dynamique.
 //------------------------------------------------------------------------ 
 
 class ApacheLogParser
@@ -30,6 +29,11 @@ class ApacheLogParser
 
 public:
 //----------------------------------------------------- Méthodes publiques
+
+	bool HasMoreToParse ( );
+	// Mode d'emploi :
+	// Indique s'il reste encore quelque chose à parser dans le flux.
+
 	LogEntry ParseLine ( );
 	// Mode d'emploi :
 	// Renvoie un LogEntry instancié à partir du flux et suivant les paramètres
@@ -39,7 +43,7 @@ public:
 	// ATTENTION : ParseLine renvoie une ligne de log même si elle aurait dû
 	// être filtrée par une des options. Les options sont ignorées.
 
-	std::vector<LogEntry> ParseToEnd ( );
+	// std::vector<LogEntry> ParseToEnd ( );
 	// Mode d'emploi :
 	// Renvoie la liste de toutes LogEntry restant à lire dans le flux dans
 	// l'ordre de lecture.
@@ -48,8 +52,10 @@ public:
 //------------------------------------------------- Surcharge d'opérateurs
 
 //-------------------------------------------- Constructeurs - destructeur
-	ApacheLogParser ( std::istream & inStream, bool excludeResourceFiles =
-			false, int hourFilter = -1 );
+
+	// TODO: add root argument to change the parsing:
+	// http://intranet-if.com/ => /
+	ApacheLogParser ( std::istream & inStream );
 	// Mode d'emploi :
 	// Construction à partir d'un flux d'entrée.
 	// Si le paramètre hourFilter est à -1, on l'ignore (i.e. aucun filtrage
@@ -58,21 +64,18 @@ public:
 	// Le flux d'entrée doit être au format d'un log Apache.
 	// S'il est renseigné, le paramètre hourFilter doit être au format 24h.
 
+	/* pas virtual <=> pas d'allocation dynamique ici */
+	~ApacheLogParser ( );
+	// Mode d'emploi :
+	// Trace la destruction si MAP est définit.
+
 //------------------------------------------------------------------ PRIVE 
 
 protected:
 //----------------------------------------------------- Méthodes protégées
-	bool hasValidExtension( LogEntry & logEntry );
-	// Mode d'emploi :
-	// Compare l'extension de l'URI contenue dans cette LogEntry
-	// avec la liste des extensions à exclure (EXCLUDE_LIST).
-	// Si l'extension est vide, on considère qu'elle est valide.
+
 //----------------------------------------------------- Attributs protégés
 	std::istream &mrInStream;
-	bool mExcludeResourceFiles;
-	int mHourFilter;
-
-	static const std::vector<std::string> EXCLUDE_LIST;
 };
 
 //------------------- Autres définitions dépendantes de <ApacheLogParser>

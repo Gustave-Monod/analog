@@ -32,12 +32,11 @@ using namespace std;
 
 bool LinkUriReferer::operator < ( LinkUriReferer const & b ) const
 {
-	// TODO
-	return true;
+	return ( mUri + SEPARATOR + mReferer ) <
+		   ( b.mUri + SEPARATOR + b.mReferer );
 } //----- Fin de operator <
 
 //-------------------------------------------- Constructeurs - destructeur
-
 
 LinkUriReferer::LinkUriReferer ( string const uri, string const referer )
 : mUri(uri), mReferer(referer)
@@ -48,8 +47,6 @@ LinkUriReferer::LinkUriReferer ( string const uri, string const referer )
 } //----- Fin de LinkUriReferer ( string const, string const )
 
 LinkUriReferer::~LinkUriReferer ( )
-// Algorithme :
-//
 {
 #ifdef MAP
     cout << "Appel au destructeur de <LinkUriReferer>" << endl;
