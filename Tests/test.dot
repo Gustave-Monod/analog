@@ -1,0 +1,8 @@
+digraph {
+	"/index.html?var=val&autreVar=autreVal";
+	"http://www.google.fr/search?hl=fr&gl=FR&ie=UTF-8&source=android-browser&q=intranet+if&redir_esc=&ei=ng1LUJe9KIGf0QXdg4HoAg";
+	C;
+	"/index.html?var=val&autreVar=autreVal" -> "http://www.google.fr/search?hl=fr&gl=FR&ie=UTF-8&source=android-browser&q=intranet+if&redir_esc=&ei=ng1LUJe9KIGf0QXdg4HoAg" [label="10"];
+	"http://www.google.fr/search?hl=fr&gl=FR&ie=UTF-8&source=android-browser&q=intranet+if&redir_esc=&ei=ng1LUJe9KIGf0QXdg4HoAg" -> "/index.html?var=val&autreVar=autreVal" [label="20"];
+	C -> "http://www.google.fr/search?hl=fr&gl=FR&ie=UTF-8&source=android-browser&q=intranet+if&redir_esc=&ei=ng1LUJe9KIGf0QXdg4HoAg" [label="30"];
+}
