@@ -27,8 +27,6 @@
 struct LinkUriReferer
 {
 //----------------------------------------------------------------- PUBLIC
-	static const char SEPARATOR = ' ';
-
     std::string Uri;
     std::string Referer;
 public:
@@ -39,9 +37,8 @@ public:
 
 	bool operator < ( LinkUriReferer const & b) const;
 	// Mode d'emploi :
-	// Dis qui de *this ou de b est le premier dans l'ordre alphabétique
-	// de la concaténation entre l'URI et le referer (dans cet ordre)
-	// du lien.
+	// Dis qui de *this ou de b est le premier dans l'ordre alphanumérique
+	// des URI, et à URI égales dans l'ordre des referer.
 
 //-------------------------------------------- Constructeurs - destructeur
 

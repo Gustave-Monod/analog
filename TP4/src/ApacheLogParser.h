@@ -28,6 +28,11 @@ class ApacheLogParser
 //----------------------------------------------------------------- PUBLIC
 
 public:
+//--------------------------------------------------- Constantes de classe
+
+	static std::string const ROOT_URL;
+	// Sert à déterminer que /page.html est la même que ROOT_URL + "page.html"
+
 //----------------------------------------------------- Méthodes publiques
 
 	bool HasMoreToParse ( );

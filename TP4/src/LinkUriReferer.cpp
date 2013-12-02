@@ -32,8 +32,9 @@ using namespace std;
 
 bool LinkUriReferer::operator < ( LinkUriReferer const & b ) const
 {
-	return ( Uri + SEPARATOR + Referer ) <
-		   ( b.Uri + SEPARATOR + b.Referer );
+	// this < b si l'URI est inférieure, ou à URI égale
+	// si le referer est inférieur (ordre alphanumérique)
+	return ( Uri == b.Uri ) ? ( Referer < b.Referer ) : ( Uri < b.Uri );
 } //----- Fin de operator <
 
 //-------------------------------------------- Constructeurs - destructeur

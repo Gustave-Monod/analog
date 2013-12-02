@@ -17,6 +17,10 @@ using namespace std;
 
 //------------------------------------------------------------- Constantes
 
+string const ApacheLogParser::ROOT_URL ( "http://intranet-if.insa-lyon.fr/" );
+// Sert à déterminer que /page.html est la même que ROOT_URL + "page.html"
+// On décide d'enlever cette chaîne si on la trouve (plus lisible que l'ajout)
+
 //----------------------------------------------------------------- PUBLIC
 
 //----------------------------------------------------- Méthodes publiques
@@ -69,6 +73,13 @@ LogEntry ApacheLogParser::ParseLine ( )
 	mrInStream.get( );
 	mrInStream.get( );
 	getline( mrInStream, referer, '"' );
+
+	if ( ROOT_URL == referer.substr( 0, ROOT_URL.length( ) ) )
+	// Si la chaîne commence par la ROOT_URL
+	{
+		// On enlève la ROOT_URL
+		referer = "/" + referer.substr( ROOT_URL.length( ) );
+	}
 
 	// On passe l'espace et le guillemet ouvrant
 	mrInStream.get( );
