@@ -26,8 +26,8 @@ using namespace std;
 string LogEntry::GetUriExtension ( )
 {
 	// S'il y a une extension présente dans le nom de fichier
-	int position = uri.find_last_of('.');
-	if ( static_cast<unsigned int>(position) != string::npos )
+	long position = uri.find_last_of('.');
+	if ( position != string::npos )
 	{
 		return uri.substr(position + 1);
 	}

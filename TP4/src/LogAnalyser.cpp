@@ -80,12 +80,15 @@ void LogAnalyser::Analyse ( )
 		}
 	}
 	// TODO: enlever (trace de test) et en plus la file est vidée.
+    long sum = 0;
 	while ( !mUrisByHits.empty( ) )
 	{
 		TUriAndRefererHits pair = mUrisByHits.top( );
-		cout << pair.first << " " << pair.second << endl;
+//		cout << pair.first << " " << pair.second << endl;
+        sum += pair.second;
 		mUrisByHits.pop( );
 	}
+    cout << sum;
 } //----- Fin de Analyse
 
 //------------------------------------------------- Surcharge d'opérateurs
@@ -134,14 +137,17 @@ void LogAnalyser::extractAll ( )
 
 void LogAnalyser::addHit ( LogEntry & e )
 {
-// On cherche le couple uri <- referer
-	THitsByLink::iterator it = mHits.find( LinkUriReferer( e.uri, e.referer ) );
-// S'il n'existe pas, on l'insère
+    // On cherche le couple uri <- referer
+    LinkUriReferer l (e.uri, e.referer);
+	THitsByLink::iterator it = mHits.find( l );
+
+    // S'il n'existe pas, on l'insère
 	if ( it == mHits.end( ) )
 	{
 		mHits.insert( make_pair( LinkUriReferer( e.uri, e.referer ), 1u ) );
 	}
-// Sinon, on incrémente le nombre de hits
+
+    // Sinon, on incrémente le nombre de hits
 	else
 	{
 		++( it->second );

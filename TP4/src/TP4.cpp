@@ -116,7 +116,8 @@ int main ( int argc, char *argv[] )
 */
 	// On lit le fichier et on appelle le parser avec les bons arguments.
 
-	ifstream inStream( "/shares/binomes/B3109/oo/analog/small.log" );
+	// ifstream inStream( "/shares/binomes/B3109/oo/analog/small.log" );
+    ifstream inStream( "/Users/gustavemonod/Documents/3IF/oo/tps/analog/small.log" );
 	// Par défaut, pas de filtrage d'extension ni d'heure:
 	LogAnalyser analyser( inStream, false, -1 );
 

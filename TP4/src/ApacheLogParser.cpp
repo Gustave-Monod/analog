@@ -48,15 +48,15 @@ LogEntry ApacheLogParser::ParseLine ( )
 	mrInStream >> authLogName;
 
 	string dateString;
-	// On passe l'espace et le premier crochet
-	mrInStream.get( );
+	// On passe les espaces blancs et le crochet ouvrant
+	mrInStream >> ws;
 	mrInStream.get( );
 	getline( mrInStream, dateString, ']' );
 	// On laisse la class Date parser le reste:
 	Date date( dateString );
 
-	// On passe l'espace et le premier guillemet
-	mrInStream.get( );
+	// On passe les espaces blancs et le guillemet ouvrant
+	mrInStream >> ws;
 	mrInStream.get( );
 
 	string requestString;
@@ -67,10 +67,24 @@ LogEntry ApacheLogParser::ParseLine ( )
 	requestStream >> protocol;
 
 	mrInStream >> status;
-	mrInStream >> size;
 
-	// On passe l'espace et le guillemet ouvrant
-	mrInStream.get( );
+	// On passe les espaces blancs
+	mrInStream >> ws;
+	// Si la taille a été anonymisée
+	if ( '-' == mrInStream.peek( ) )
+	{
+		// On la met à zéro
+		size = 0;
+		// On passe le tiret
+		mrInStream.get( );
+	}
+	else
+	{
+		mrInStream >> size;
+	}
+
+	// On passe les espaces blancs et le guillemet ouvrant
+	mrInStream >> ws;
 	mrInStream.get( );
 	getline( mrInStream, referer, '"' );
 
@@ -81,8 +95,8 @@ LogEntry ApacheLogParser::ParseLine ( )
 		referer = "/" + referer.substr( ROOT_URL.length( ) );
 	}
 
-	// On passe l'espace et le guillemet ouvrant
-	mrInStream.get( );
+	// On passe les espaces blancs et le guillemet ouvrant
+	mrInStream >> ws;
 	mrInStream.get( );
 	getline( mrInStream, userAgent, '"' );
 
@@ -123,14 +137,14 @@ ApacheLogParser::ApacheLogParser ( std::istream & inStream )
 		: mrInStream( inStream )
 {
 #ifdef MAP
-    cout << "Appel au constructeur de <ApacheLogParser>" << endl;
+	cout << "Appel au constructeur de <ApacheLogParser>" << endl;
 #endif
 } //----- Fin de ApacheLogParser ( std::istream &, bool, int )
 
 ApacheLogParser::~ApacheLogParser ( )
 {
 #ifdef MAP
-    cout << "Appel au destructeur de <ApacheLogParser>" << endl;
+	cout << "Appel au destructeur de <ApacheLogParser>" << endl;
 #endif
 } //----- Fin de ~ApacheLogParser
 
