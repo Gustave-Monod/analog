@@ -1,10 +1,3 @@
-/*************************************************************************
-                           LinkUriReferer  -  description
-                             -------------------
-    début                : 28 nov. 2013
-    copyright            : (C) 2013 par gmonod
-*************************************************************************/
-
 //---------- Interface de la classe <LinkUriReferer> (fichier LinkUriReferer.h) ------
 #if ! defined ( LINKURIREFERER_H_ )
 #define LINKURIREFERER_H_

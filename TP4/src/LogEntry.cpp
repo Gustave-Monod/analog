@@ -1,15 +1,8 @@
-/*************************************************************************
- LogEntry  -  description
- -------------------
- début                : 14 nov. 2013
- copyright            : (C) 2013 par mnimierdav
- *************************************************************************/
-
 //---------- Réalisation de la classe <LogEntry> (fichier LogEntry.cpp) -------
 //---------------------------------------------------------------- INCLUDE
 //-------------------------------------------------------- Include système
-using namespace std;
 #include <iostream>
+using namespace std;
 
 //------------------------------------------------------ Include personnel
 #include "LogEntry.h"

@@ -1,17 +1,10 @@
-/*************************************************************************
- LogAnalyser  -  description
- -------------------
- début                : 18 nov. 2013
- copyright            : (C) 2013 par gmonod
- *************************************************************************/
-
 //---------- Réalisation de la classe <LogAnalyser> (fichier LogAnalyser.cpp) -------
 //---------------------------------------------------------------- INCLUDE
 //-------------------------------------------------------- Include système
-using namespace std;
 #include <iostream>
 #include <algorithm>
 #include <queue>
+using namespace std;
 
 //------------------------------------------------------ Include personnel
 #include "LogAnalyser.h"
@@ -24,27 +17,28 @@ string const theExtensions[] = { "jpg", "jpeg", "png", "gif", "bmp", "js",
 const vector<string> LogAnalyser::EXCLUDE_LIST( theExtensions,
 		theExtensions + 18 );
 
-// TODO: passer en paramètre, par défaut à
+// TODO: rendre contrôlable par le paramètre -l
 unsigned int const DEFAULT_RESULT_SIZE = 10u;
 
 //----------------------------------------------------------------- PUBLIC
 
 //----------------------------------------------------- Méthodes publiques
-
-void LogAnalyser::Analyse ( )
-// Extrait tout et parcours la map pour créer la file à priorité:
+THitsByLink & LogAnalyser::Analyse ( )
+// Extrait tout et parcourt la map pour créer la file à priorité :
 // Pour chaque entrée de la map avec la même URI (la map est triée par URI,
 // et à URI égales par referer) on agrège le nombre de hits (somme).
 {
+	// On génère la map à partir du fichier de log, en prenant en compte les options
 	extractAll( );
 
 	THitsByLink::const_iterator it, currentUri;
 	TUriAndRefererHits pair;
 
-	for ( it = mHits.begin( ), currentUri = mHits.begin( ); it != mHits.end( );
-			++it )
+	currentUri = mHits.begin( );
+	// On parcourt toute la map
+	for ( it = mHits.begin( ); it != mHits.end( ); ++it )
 	{
-		// Dans le premier tour, on initialise la paire.
+		// Dans le premier tour, on initialise la paire (uri, #hits)
 		if ( it == mHits.begin( ) )
 		{
 			pair = make_pair( it->first.Uri, it->second );
@@ -56,7 +50,7 @@ void LogAnalyser::Analyse ( )
 		{
 			pair.second = pair.second + it->second;
 		}
-		// Si les URI sont différentes, c'est qu'on a finit la somme:
+		// Si les URI sont différentes, c'est qu'on a fini la somme
 		else
 		{
 			// TODO Si on est >= nombre minimum de hits (-l)
@@ -65,7 +59,7 @@ void LogAnalyser::Analyse ( )
 				// On insère le nombre total de hits dans la file
 				mUrisByHits.push( pair );
 				// Si on dépasse la taille souhaitée (ex 10 plus grands)
-//				if ( mUrisByHits.size( ) >  10 /*DEFAULT_RESULT_SIZE*/ )
+//				if ( mUrisByHits.size( ) > DEFAULT_RESULT_SIZE )
 //				{
 //					// On enlève celui avec le score le moins bon
 //					mUrisByHits.pop( );
@@ -79,7 +73,7 @@ void LogAnalyser::Analyse ( )
 			pair = make_pair( it->first.Uri, it->second );
 		}
 	}
-	// TODO: enlever (trace de test) et en plus la file est vidée.
+	// TODO: enlever (trace de test) et en plus la file est vidée
     long sum = 0;
 	while ( !mUrisByHits.empty( ) )
 	{
@@ -88,7 +82,9 @@ void LogAnalyser::Analyse ( )
         sum += pair.second;
 		mUrisByHits.pop( );
 	}
-    cout << sum;
+    cout << sum << " hits comptés." << endl;
+	
+	return mHits;
 } //----- Fin de Analyse
 
 //------------------------------------------------- Surcharge d'opérateurs
@@ -147,7 +143,7 @@ void LogAnalyser::addHit ( LogEntry & e )
 		mHits.insert( make_pair( LinkUriReferer( e.uri, e.referer ), 1u ) );
 	}
 
-    // Sinon, on incrémente le nombre de hits
+    // Sinon, on incrémente le nombre de hits pour ce couple
 	else
 	{
 		++( it->second );
@@ -156,8 +152,8 @@ void LogAnalyser::addHit ( LogEntry & e )
 
 bool LogAnalyser::hasValidExtension ( LogEntry& logEntry )
 {
-// L'extension est valide si on n'arrive pas à la trouver dans
-// la liste des extensions exclues
+	// L'extension est valide si on n'arrive pas à la trouver dans
+	// la liste des extensions exclues
 	return find( EXCLUDE_LIST.begin( ), EXCLUDE_LIST.end( ),
 			logEntry.GetUriExtension( ) ) == EXCLUDE_LIST.end( );
 } //----- Fin de hasValidExtension

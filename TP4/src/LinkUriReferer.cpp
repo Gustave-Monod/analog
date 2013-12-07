@@ -1,17 +1,10 @@
-/*************************************************************************
-                           LinkUriReferer  -  description
-                             -------------------
-    début                : 28 nov. 2013
-    copyright            : (C) 2013 par gmonod
-*************************************************************************/
-
 //---------- Réalisation de la classe <LinkUriReferer> (fichier LinkUriReferer.cpp) -------
 
 //---------------------------------------------------------------- INCLUDE
 
 //-------------------------------------------------------- Include système
-using namespace std;
 #include <iostream>
+using namespace std;
 
 //------------------------------------------------------ Include personnel
 #include "LinkUriReferer.h"

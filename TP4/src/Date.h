@@ -1,10 +1,3 @@
-/*************************************************************************
-                           Date  -  description
-                             -------------------
-    début                : 14 nov. 2013
-    copyright            : (C) 2013 par mnimierdav
-*************************************************************************/
-
 //---------- Interface de la classe <Date> (fichier Date.h) ------
 #if ! defined ( DATE_H_ )
 #define DATE_H_

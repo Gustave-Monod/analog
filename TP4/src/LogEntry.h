@@ -1,10 +1,3 @@
-/*************************************************************************
- LogEntry  -  description
- -------------------
- début                : 14 nov. 2013
- copyright            : (C) 2013 par mnimierdav
- *************************************************************************/
-
 //---------- Interface de la classe <LogEntry> (fichier LogEntry.h) ------
 #if ! defined ( LOGENTRY_H_ )
 #define LOGENTRY_H_

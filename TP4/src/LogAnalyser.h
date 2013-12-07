@@ -1,10 +1,3 @@
-/*************************************************************************
- LogAnalyser  -  description
- -------------------
- début                : 18 nov. 2013
- copyright            : (C) 2013 par gmonod
- *************************************************************************/
-
 //---------- Interface de la classe <LogAnalyser> (fichier LogAnalyser.h) ------
 #if ! defined ( LOGANALYSER_H_ )
 #define LOGANALYSER_H_
@@ -24,12 +17,14 @@ typedef std::map<LinkUriReferer, unsigned int> THitsByLink;
 
 typedef std::pair<std::string, int> TUriAndRefererHits;
 
-// Pour trier la file à priorité, on définit un foncteur:
+// Pour trier la file à priorité, on définit un foncteur
 class UriAndHitsGreater
 {
 public:
 	// On trie le plus souvent en ordre inverse pour pouvoir enlever
-	// les éléments avec le nombre de hits le plus bas.
+	// facilement les éléments avec le nombre de hits le plus bas
+	// (ils se retrouveront naturellement en bout de fil, on pourra les
+	// supprimer d'un simple pop)
 	UriAndHitsGreater ( const bool descending = false )
 			: mDescending( descending )
 	{
@@ -44,6 +39,8 @@ protected:
 	bool mDescending;
 };
 
+// Cette file à priorité contiendra les # URI ayant le plus grand nombre de hits
+// (# varie selon les options données par l'utilisateur)
 typedef std::priority_queue<TUriAndRefererHits, std::vector<TUriAndRefererHits>,
 		UriAndHitsGreater> TPriorityQueue;
 
@@ -60,9 +57,10 @@ class LogAnalyser
 
 public:
 //----------------------------------------------------- Méthodes publiques
-	void Analyse ( );
+	THitsByLink & Analyse ( );
 	// Mode d'emploi :
 	// Analyse
+	// Retourne la map contenant toutes les informations extraites des logs.
 	// Contrat :
 	//
 
@@ -74,7 +72,7 @@ public:
 	// Mode d'emploi :
 	// Trace la construction.
 
-	/* pas virtual <=> pas d'allocation dynamique ici */
+	// Pas virtual <=> pas d'allocation dynamique ici
 	~LogAnalyser ( );
 	// Mode d'emploi :
 	// Trace la destruction.

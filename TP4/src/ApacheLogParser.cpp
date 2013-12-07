@@ -1,16 +1,9 @@
-/*************************************************************************
- ApacheLogParser  -  description
- -------------------
- début                : 14 nov. 2013
- copyright            : (C) 2013 par mnimierdav
- *************************************************************************/
-
 //- Réalisation de la classe <ApacheLogParser> (fichier ApacheLogParser.cpp) -
 //---------------------------------------------------------------- INCLUDE
 //-------------------------------------------------------- Include système
-using namespace std;
 #include <iostream>
 #include <sstream>
+using namespace std;
 
 //------------------------------------------------------ Include personnel
 #include "ApacheLogParser.h"

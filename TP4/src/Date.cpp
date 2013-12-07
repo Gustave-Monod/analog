@@ -1,17 +1,10 @@
-/*************************************************************************
- Date  -  description
- -------------------
- début                : 14 nov. 2013
- copyright            : (C) 2013 par mnimierdav
- *************************************************************************/
-
 //---------- Réalisation de la classe <Date> (fichier Date.cpp) -------
 //---------------------------------------------------------------- INCLUDE
 //-------------------------------------------------------- Include système
-using namespace std;
 #include <iostream>
 #include <sstream>
 #include <cstdlib>
+using namespace std;
 
 //------------------------------------------------------ Include personnel
 #include "Date.h"

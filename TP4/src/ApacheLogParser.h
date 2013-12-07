@@ -1,10 +1,3 @@
-/*************************************************************************
- ApacheLogParser  -  description
- -------------------
- début                : 14 nov. 2013
- copyright            : (C) 2013 par mnimierdav
- *************************************************************************/
-
 //-- Interface de la classe <ApacheLogParser> (fichier ApacheLogParser.h) -
 #if ! defined ( APACHELOGPARSER_H_ )
 #define APACHELOGPARSER_H_
@@ -69,7 +62,7 @@ public:
 	// Le flux d'entrée doit être au format d'un log Apache.
 	// S'il est renseigné, le paramètre hourFilter doit être au format 24h.
 
-	/* pas virtual <=> pas d'allocation dynamique ici */
+	// Pas virtual <=> pas d'allocation dynamique ici
 	~ApacheLogParser ( );
 	// Mode d'emploi :
 	// Trace la destruction si MAP est définit.
