@@ -11,9 +11,9 @@ using namespace std;
 
 //------------------------------------------------------------- Constantes
 
-string const theExtensions[] = { "jpg", "jpeg", "png", "gif", "bmp", "js",
-		"css", "mp3", "aac", "flac", "wav", "ogg", "mp4", "mov", "m4v", "flv",
-		"3gp", "svg" };
+string const theExtensions[] = { "jpg", "jpeg", "png", "gif", "bmp", "ico",
+		"js", "css", "mp3", "aac", "flac", "wav", "ogg", "mp4", "mov", "m4v",
+		"flv", "3gp", "svg" };
 const vector<string> LogAnalyser::EXCLUDE_LIST( theExtensions,
 		theExtensions + 18 );
 
