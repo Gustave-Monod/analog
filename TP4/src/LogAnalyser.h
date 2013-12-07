@@ -64,6 +64,9 @@ public:
 	
 	THitsByLink & getData ( );
 	
+	// Paramétrage de ApacheLogParser
+	void SetRootUrl ( std::string const rootUrl );
+	void SetStripGetParameters ( bool stripGetParameters );
 	// Paramétrage de LogAnalyser
 	void SetExcludeResourceFiles ( bool excludeResourceFiles );
 	void SetHourFilter ( int hourFilter );

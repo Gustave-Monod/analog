@@ -206,6 +206,8 @@ int main ( int argc, char *argv[] )
 	}
 	// On instancie et configure le LogAnalyser avec les options passées
 	LogAnalyser analyser( inStream );
+	analyser.SetRootUrl( "http://intranet-if.insa-lyon.fr/" );
+	analyser.SetStripGetParameters( true );
 	analyser.SetExcludeResourceFiles( excludeResourceFiles );
 	analyser.SetMinimumRefererHits( minimumRefererHits );
 	analyser.SetHourFilter( hourFilter );

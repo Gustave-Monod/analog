@@ -93,7 +93,15 @@ THitsByLink & LogAnalyser::getData ( )
 	return mHits;
 } //----- Fin de getData
 
-
+// Fonctions de paramétrage du ApacheLogParser
+void LogAnalyser::SetRootUrl ( string const rootUrl )
+{
+	mParser.SetRootUrl( rootUrl );
+}
+void LogAnalyser::SetStripGetParameters ( bool stripGetParameters )
+{
+	mParser.SetStripGetParameters( stripGetParameters );
+}
 // Fonctions de paramétrage du LogAnalyser
 void LogAnalyser::SetExcludeResourceFiles ( bool excludeResourceFiles )
 {

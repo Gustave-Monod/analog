@@ -9,11 +9,6 @@ using namespace std;
 #include "ApacheLogParser.h"
 
 //------------------------------------------------------------- Constantes
-
-string const ApacheLogParser::ROOT_URL ( "http://intranet-if.insa-lyon.fr/" );
-// Sert à déterminer que /page.html est la même que ROOT_URL + "page.html"
-// On décide d'enlever cette chaîne si on la trouve (plus lisible que l'ajout)
-
 //----------------------------------------------------------------- PUBLIC
 
 //----------------------------------------------------- Méthodes publiques
@@ -36,6 +31,7 @@ LogEntry ApacheLogParser::ParseLine ( )
 	long size;
 	string referer;
 	string userAgent;
+	
 	mrInStream >> ip;
 	mrInStream >> logName;
 	mrInStream >> authLogName;
@@ -45,7 +41,7 @@ LogEntry ApacheLogParser::ParseLine ( )
 	mrInStream >> ws;
 	mrInStream.get( );
 	getline( mrInStream, dateString, ']' );
-	// On laisse la class Date parser le reste:
+	// On laisse la class Date parser le reste
 	Date date( dateString );
 
 	// On passe les espaces blancs et le guillemet ouvrant
@@ -80,54 +76,56 @@ LogEntry ApacheLogParser::ParseLine ( )
 	mrInStream >> ws;
 	mrInStream.get( );
 	getline( mrInStream, referer, '"' );
-
-	if ( ROOT_URL == referer.substr( 0, ROOT_URL.length( ) ) )
-	// Si la chaîne commence par la ROOT_URL
-	{
-		// On enlève la ROOT_URL
-		referer = "/" + referer.substr( ROOT_URL.length( ) );
-	}
-
+	
 	// On passe les espaces blancs et le guillemet ouvrant
 	mrInStream >> ws;
 	mrInStream.get( );
 	getline( mrInStream, userAgent, '"' );
-
+	
+	// Si on nous a donné une root URL, on l'ôte si besoin du referer
+	if ( mRootUrl.size() > 0 )
+	{
+		referer = stripRootUrl( referer );
+	}
+	// Si on nous a demandé de se débarrasser des paramètes GET
+	if ( mStripGetParameters )
+	{
+		// On s'occupe de l'URI
+		uri = stripGetParameters( uri );
+		referer = stripGetParameters( referer );
+	}
+	uri = stripIndexFilename( uri );
+	referer = stripIndexFilename( referer );
+	
 	return LogEntry( ip, logName, authLogName, date, method, uri, protocol,
 			status, size, referer, userAgent );
 } //----- Fin de ParseLine
 
-//std::vector<LogEntry> ApacheLogParser::ParseToEnd ( )
-//{
-//	vector<LogEntry> result;
-//
-//	// On passe les espaces blancs
-//	mrInStream >> ws;
-//	while ( mrInStream.good( ) )
-//	{
-//		LogEntry e = ParseLine( );
-//		// Si cette ligne est compatible avec les options activées
-//		bool doNotFilter = ( !mExcludeResourceFiles && mHourFilter < 0 );
-//		if ( doNotFilter
-//				|| ( ( mHourFilter < 0 || e.date.hour == mHourFilter )
-//						&& ( !mExcludeResourceFiles || hasValidExtension( e ) ) ) )
-//		{
-//			result.push_back( e );
-//		}
-//		// On passe les espaces blancs
-//		mrInStream >> ws;
-//	}
-//
-//	return result;
-//
-//} //----- Fin de ParseToEnd
+// Paramétrage de ApacheLogParser
+void ApacheLogParser::SetRootUrl ( string const rootUrl )
+{
+	// On ignore un éventuel slash final
+	if ( rootUrl[rootUrl.length() - 1] == '/' )
+	{
+		mRootUrl = rootUrl.substr( 0, rootUrl.length() - 1 );
+	}
+	else
+	{
+		mRootUrl = rootUrl;
+	}
+}
+void ApacheLogParser::SetStripGetParameters ( bool stripGetParameters )
+{
+	mStripGetParameters = stripGetParameters;
+}
 
 //------------------------------------------------- Surcharge d'opérateurs
 
 //-------------------------------------------- Constructeurs - destructeur
 
 ApacheLogParser::ApacheLogParser ( std::istream & inStream )
-		: mrInStream( inStream )
+		: mrInStream( inStream ), mStripGetParameters( false ),
+		  mRootUrl( "" )
 {
 #ifdef MAP
 	cout << "Appel au constructeur de <ApacheLogParser>" << endl;
@@ -145,3 +143,43 @@ ApacheLogParser::~ApacheLogParser ( )
 //------------------------------------------------------------------ PRIVE
 
 //----------------------------------------------------- Méthodes protégées
+string ApacheLogParser::stripRootUrl ( string const url )
+{
+	string result = url;
+	if ( result.substr( 0, mRootUrl.length( ) ) == mRootUrl )
+	{
+		result = result.substr( mRootUrl.length( ) );
+		if ( result.length() < 1 )
+		{
+			result = "/";
+		}
+	}
+	return result;
+}
+string ApacheLogParser::stripGetParameters ( string const uri )
+{
+	size_t positionOfGet = uri.find( '?' );
+	if ( positionOfGet != string::npos )
+	{
+		return uri.substr( 0, positionOfGet );
+	}
+	else
+	{
+		return uri;
+	}
+}
+string ApacheLogParser::stripIndexFilename ( string const uri )
+{
+	string result = uri;
+	size_t position = result.find("index.html");
+	if ( position != string::npos )
+	{
+		result = result.substr(0, position );
+	}
+	position = uri.find( "index.php" );
+	if ( position != string::npos )
+	{
+		result = result.substr(0, position );
+	}
+	return result;
+}

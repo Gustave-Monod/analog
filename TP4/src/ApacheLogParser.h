@@ -22,10 +22,6 @@ class ApacheLogParser
 
 public:
 //--------------------------------------------------- Constantes de classe
-
-	static std::string const ROOT_URL;
-	// Sert à déterminer que /page.html est la même que ROOT_URL + "page.html"
-
 //----------------------------------------------------- Méthodes publiques
 
 	bool HasMoreToParse ( );
@@ -47,12 +43,14 @@ public:
 	// l'ordre de lecture.
 	// Si le flux ne contient pas de ligne à lire, la liste est vide.
 
+	// Paramétrage de ApacheLogParser
+	void SetRootUrl ( std::string const rootUrl );
+	void SetStripGetParameters ( bool stripGetParameters );
+	
 //------------------------------------------------- Surcharge d'opérateurs
 
 //-------------------------------------------- Constructeurs - destructeur
 
-	// TODO: add root argument to change the parsing:
-	// http://intranet-if.com/ => /
 	ApacheLogParser ( std::istream & inStream );
 	// Mode d'emploi :
 	// Construction à partir d'un flux d'entrée.
@@ -71,9 +69,29 @@ public:
 
 protected:
 //----------------------------------------------------- Méthodes protégées
-
+	std::string stripRootUrl ( std::string const url );
+	// Mode d'emploi :
+	// Si mRootUrl n'est pas vide, on renvoie l'URL débarassée de ce préfixe.
+	// Exemple : "http://intranet-if.insa-lyon.fr/temps/5IF40.html"
+	// devient   "/temps/5IF40.html"
+	std::string stripGetParameters ( std::string const uri );
+	// Mode d'emploi :
+	// Renvoie l'URI débarassée de ses paramètes GET.
+	// Exemple : "http://www.google.fr/?q=42"
+	// devient   "http://www.google.fr/"
+	std::string stripIndexFilename ( std::string const uri );
+	// Mode d'emploi :
+	// Si l'URI donnée contient "index.html" ou "index.php",
+	// on renvoie la version épurée. Cependant, on fait attention à ne pas
+	// supprimer des paramètres GET éventuels si on ne nous l'a pas demandé.
+	
 //----------------------------------------------------- Attributs protégés
 	std::istream &mrInStream;
+	
+	// Indique si l'on doit supprimer tous les paramètres GET des URIs
+	bool mStripGetParameters;
+	// Sert à déterminer que /page.html est la même que ROOT_URL + "page.html"
+	std::string mRootUrl;
 };
 
 //------------------- Autres définitions dépendantes de <ApacheLogParser>
