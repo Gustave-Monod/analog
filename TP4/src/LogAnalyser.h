@@ -63,6 +63,12 @@ public:
 	// Retourne la file à priorité contenant le top N.
 	
 	THitsByLink & getData ( );
+	
+	// Paramétrage de LogAnalyser
+	void SetExcludeResourceFiles ( bool excludeResourceFiles );
+	void SetHourFilter ( int hourFilter );
+	void SetMinimumRefererHits ( int minimumRefererHits );
+	void SetTopSizeLimit ( int topSizeLimit );
 
 //------------------------------------------------- Surcharge d'opérateurs
 //-------------------------------------------- Constructeurs - destructeur
@@ -106,19 +112,16 @@ protected:
 //----------------------------------------------------- Attributs protégés
 
 	ApacheLogParser mParser;
+	THitsByLink mHits;
+	TPriorityQueue topHits;
+	
+	static const std::vector<std::string> EXCLUDE_LIST;
+	static unsigned int const DEFAULT_TOP_SIZE_LIMIT = 10;
+	
 	bool mExcludeResourceFiles;
 	int mHourFilter;
 	int mMinimumRefererHits;
 	int mTopSizeLimit;
-
-	THitsByLink mHits;
-
-	TPriorityQueue topHits;
-
-	static const std::vector<std::string> EXCLUDE_LIST;
-
-	static unsigned int const DEFAULT_TOP_SIZE_LIMIT = 10;
-	
 };
 
 //--------------------------- Autres définitions dépendantes de <LogAnalyser>

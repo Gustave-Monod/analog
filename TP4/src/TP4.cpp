@@ -1,6 +1,8 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include <algorithm>
+#include "unistd.h"
 
 #include "LogAnalyser.h"
 #include "GraphGenerator.h"
@@ -78,43 +80,136 @@ void showUsage ( char *pszPath )
 
 int main ( int argc, char *argv[] )
 {
-/*
-	string const theOptions[] = {
-		"-h",
-		// Toutes les options suivantes nécessitent un nom de fichier
-		// en entrée (fichierL)
-		"-x", "-a",
-		"-g", // Nécessite un nom de fichier en sortie (fichierG)
-		"-l", "-t", "-n" // Nécessite un nombre (
-		// TODO : rajouter une option permettant de virer les variables
-		// GET des URI et Referers
-	};
-	const vector<string> OPTIONS( theOptions, theOptions + 7 );
-
-	if ( argc < 2 )
+	char const * OPTIONS = "hxag:l:t:n:";
+	
+	string pathToLogFile = "";
+	bool showHelp = false;
+	string graphOutputPath = "";
+	bool excludeResourceFiles = false;
+	int minimumRefererHits = -1;
+	int hourFilter = -1;
+	int topHitsSizeLimit = -1;
+	bool showAll = false;
+	
+	bool argumentsNotValid = false;
+	// Pas assez d'arguments passés
+	argumentsNotValid = argumentsNotValid || ( argc < 2 );
+	
+	// On parse les arguments passés
+	int thisOption;
+	string thisArgument;
+	stringstream ss;
+	bool argumentIsNumber;
+	int numberHolder;
+	while ( !argumentsNotValid && (thisOption = getopt( argc, argv, OPTIONS )) != -1 )
+	{
+		thisArgument = "";
+		argumentIsNumber = false;
+		if ( optarg != NULL )
+		{
+			thisArgument = string( optarg );
+			ss.clear();
+			ss << thisArgument;
+			// On essaie de parser un nombre
+			if ( ss >> numberHolder )
+			{
+				argumentIsNumber = true;
+			}
+			// On vérifie maintenant que les arguments sont du bon type en fonction de l'option
+			switch ( thisOption )
+			{
+				// Options nécessitant un nombre en argument
+				case 'l':
+				case 't':
+				case 'n':
+					argumentsNotValid = argumentsNotValid || !argumentIsNumber;
+					break;
+				// Options nécessitant un nom de fichier de sortie
+				case 'g':
+					argumentsNotValid = argumentsNotValid || thisArgument[0] == '-';
+				break;
+			}
+		}
+		
+		// Après s'être assuré que l'éventuel argument soit valide, on l'assigne à la bonne variable
+		if ( !argumentsNotValid )
+		{
+			switch ( thisOption )
+			{
+				// Option illégalle
+				case '?':
+					argumentsNotValid = true;
+					break;
+				case 'h':
+					showHelp = true;
+					break;
+					
+				// Options nécessitant un nombre en argument
+				case 'l':
+					minimumRefererHits = numberHolder;
+					break;
+				case 't':
+					hourFilter = numberHolder;
+					break;
+				case 'n':
+					topHitsSizeLimit = numberHolder;
+					break;
+				// Options nécessitant un nom de fichier de sortie
+				case 'g':
+					graphOutputPath = thisArgument;
+					break;
+				// Autres options
+				case 'x':
+					excludeResourceFiles = true;
+					break;
+				case 'a':
+					showAll = true;
+					break;
+				default:
+					break;
+			}
+		}
+		
+//		cout << "Option : " << (char)thisOption;
+//		if ( thisArgument.length() > 0 )
+//			cout << " = " << thisArgument;
+//		cout << endl;
+	}
+	
+	if ( showHelp )
+	{
+		showUsage ( argv[0] );
+		return SUCCESS;
+	}
+	// À part pour -h, on a besoin du nom du fichier de log
+	if ( optind < argc )
+	{
+		pathToLogFile = argv[optind];
+	}
+	else
+	{
+		argumentsNotValid = true;
+	}
+	
+	if ( argumentsNotValid )
 	{
 		showUsage ( argv[0] );
 		return ERR_ARGS;
 	}
-
-	string firstArgument ( argv[1] );
-
-	bool badCombination = firstArgument == "-h" && argc > 2;
-	// TODO : vérifier que tous les arguments passés font partie des options
-	if ( badCombination )
+	
+	
+    ifstream inStream( pathToLogFile );
+	if ( !inStream )
 	{
-		showUsage ( argv[0] );
-		return ERR_ARGS;
+		cerr << "Impossible de lire le fichier de log " << pathToLogFile << endl;
+		return ERR_READ;
 	}
-*/
-	// On ouvre le fichier et on appelle le parser avec les bons arguments
-	// ifstream inStream( "/shares/binomes/B3109/oo/analog/small.log" );
-    ifstream inStream( "/Users/Merlin/Documents/Cours/3IF/OO/analog/small.log" );
-	// Par défaut, pas de filtrage d'extension ni d'heure
-	
-	LogAnalyser analyser( inStream, false, -1 );
-	// TODO : configurer l'analyser selon les options
-	
+	// On instancie et configure le LogAnalyser avec les options passées
+	LogAnalyser analyser( inStream );
+	analyser.SetExcludeResourceFiles( excludeResourceFiles );
+	analyser.SetMinimumRefererHits( minimumRefererHits );
+	analyser.SetHourFilter( hourFilter );
+	analyser.SetTopSizeLimit( topHitsSizeLimit );
 	
 	TPriorityQueue & topN = analyser.Analyse();
 	THitsByLink & data = analyser.getData();
@@ -125,7 +220,10 @@ int main ( int argc, char *argv[] )
 	{
 		totalHits += it->second;
 	}
-    cout << totalHits << " hits comptés (attention, -l peut être activé)." << endl;
+    cout << totalHits << " hits comptés";
+	if ( minimumRefererHits > -1 )
+		cout << " (attention, -l est activé avec minimumRefererHits = " << minimumRefererHits << ")";
+	cout << endl;
 	// Test : afficher le nombre total de hits comptabilisés dans le top
 	totalHits = 0;
 	while ( !topN.empty() )
@@ -133,13 +231,18 @@ int main ( int argc, char *argv[] )
 		totalHits += topN.top().second;
 		topN.pop();
 	}
-    cout << totalHits << " hits comptés dans la file." << endl;
-
+    cout << totalHits << " hits comptés dans la file" << endl;
 	
-	// On s'occuppe maintenant de générer le graphe représentant les parcours
-	GraphGenerator generator;
-	// TODO : prendre en compte le nom du fichier de sortie donné en paramètre
-	generator.GenerateGraphTo( data, "out.dot" );
+	// TODO : affichage du top N (ou top tout avec l'option -a)
+	
+	// Génération du graphe représentant les parcours (si demandé)
+	if ( graphOutputPath.length() > 0 )
+	{
+		GraphGenerator generator;
+		// TODO : remplacer le path par un ofstream
+		generator.GenerateGraphTo( data, graphOutputPath );
+		cout << "Dot-file generated" << endl;
+	}
 	
 	return SUCCESS;
 }

@@ -52,6 +52,7 @@ TPriorityQueue & LogAnalyser::Analyse ( )
 		if ( it->first.Uri == currentPair.first )
 		{
 			currentPair.second += it->second;
+			
 		}
 		// Sinon, c'est le moment de faire une insertion dans le top
 		else
@@ -91,6 +92,25 @@ THitsByLink & LogAnalyser::getData ( )
 {
 	return mHits;
 } //----- Fin de getData
+
+
+// Fonctions de paramétrage du LogAnalyser
+void LogAnalyser::SetExcludeResourceFiles ( bool excludeResourceFiles )
+{
+	mExcludeResourceFiles = excludeResourceFiles;
+}
+void LogAnalyser::SetHourFilter ( int hourFilter )
+{
+	mHourFilter = hourFilter;
+}
+void LogAnalyser::SetMinimumRefererHits ( int minimumRefererHits )
+{
+	mMinimumRefererHits = minimumRefererHits;
+}
+void LogAnalyser::SetTopSizeLimit ( int topSizeLimit )
+{
+	mTopSizeLimit = topSizeLimit;
+}
 
 //------------------------------------------------- Surcharge d'opérateurs
 
