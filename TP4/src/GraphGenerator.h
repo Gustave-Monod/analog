@@ -1,15 +1,10 @@
-/*************************************************************************
-                           GraphGenerator  -  description
-                             -------------------
-    début                : 28 nov. 2013
-    copyright            : (C) 2013 par mnimierdav
-*************************************************************************/
-
 //---------- Interface de la classe <GraphGenerator> (fichier GraphGenerator.h) ------
 #if ! defined ( GRAPHGENERATOR_H_ )
 #define GRAPHGENERATOR_H_
 
 //--------------------------------------------------- Interfaces utilisées
+#include <string>
+#include "LogAnalyser.h"
 
 //------------------------------------------------------------- Constantes 
 
@@ -27,7 +22,8 @@ class GraphGenerator
 
 public:
 //----------------------------------------------------- Méthodes publiques
-    // type Méthode ( liste des paramètres );
+	// TODO : make this method static?
+	void GenerateGraphTo ( THitsByLink const & data, std::string const outputPath );
     // Mode d'emploi :
     //
     // Contrat :
@@ -53,7 +49,10 @@ public:
 
 protected:
 //----------------------------------------------------- Méthodes protégées
-
+	std::string getNodeDeclarationLine( std::string const nodeName );
+	std::string getEdgeDeclarationLine( std::string const source,
+									    std::string const destination,
+									    std::string const label );
 //----------------------------------------------------- Attributs protégés
 
 };

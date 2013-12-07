@@ -116,7 +116,6 @@ int main ( int argc, char *argv[] )
 	
 	// On s'occuppe maintenant de générer le graphe représentant le parcours
 	GraphGenerator generator;
-	generator.GenerateGraphTo(data, "out.png");
-	
+	generator.GenerateGraphTo( data, "out.dot" );
 	return SUCCESS;
 }

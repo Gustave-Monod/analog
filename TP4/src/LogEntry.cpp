@@ -31,11 +31,6 @@ string LogEntry::GetUriExtension ( )
 } //----- Fin de GetUriExtension
 
 //------------------------------------------------- Surcharge d'opérateurs
-//LogEntry & LogEntry::operator = ( const LogEntry & unLogEntry )
-// Algorithme :
-//
-//{
-//} //----- Fin de operator =
 
 //-------------------------------------------- Constructeurs - destructeur
 
@@ -44,8 +39,6 @@ LogEntry::LogEntry ( std::string const & Ip, std::string const & LogName,
 		std::string const & Method, std::string const & Uri,
 		std::string const & Protocol, int Status, long Size,
 		std::string const & Referer, std::string const & UserAgent )
-// Algorithme :
-//
 		: ip( Ip ), logName( LogName ), authLogName( AuthLogName ),
 			date( theDate ), method( Method ), uri( Uri ), protocol( Protocol ),
 			status( Status ), size( Size ), referer( Referer ),
