@@ -10,20 +10,10 @@ using namespace std;
 #include "Date.h"
 
 //------------------------------------------------------------- Constantes
-
 //----------------------------------------------------------------- PUBLIC
-
 //----------------------------------------------------- Méthodes publiques
-// type Date::Méthode ( liste des paramètres )
-// Algorithme :
-//
-//{
-//} //----- Fin de Méthode
-
 //------------------------------------------------- Surcharge d'opérateurs
-
 //-------------------------------------------- Constructeurs - destructeur
-
 Date::Date ( string const & dateString )
 // Exemple de format de la string reçue :
 // 08/Sep/2012:11:15:00 +0200
@@ -55,5 +45,4 @@ Date::Date ( string const & dateString )
 } //----- Fin de Date
 
 //------------------------------------------------------------------ PRIVE
-
 //----------------------------------------------------- Méthodes protégées

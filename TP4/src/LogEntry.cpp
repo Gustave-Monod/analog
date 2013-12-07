@@ -3,19 +3,12 @@
 //-------------------------------------------------------- Include système
 #include <iostream>
 using namespace std;
-
 //------------------------------------------------------ Include personnel
 #include "LogEntry.h"
-
 //------------------------------------------------------------- Constantes
 
 //----------------------------------------------------------------- PUBLIC
-
 //----------------------------------------------------- Méthodes publiques
-
-
-// BonjreuoRKL/fdjKL.css/QF.DCOIfd.css
-
 string LogEntry::GetUriExtension ( )
 {
 	// S'il y a une extension présente dans le nom de fichier
@@ -29,11 +22,8 @@ string LogEntry::GetUriExtension ( )
 		return "";
 	}
 } //----- Fin de GetUriExtension
-
 //------------------------------------------------- Surcharge d'opérateurs
-
 //-------------------------------------------- Constructeurs - destructeur
-
 LogEntry::LogEntry ( std::string const & Ip, std::string const & LogName,
 		std::string const & AuthLogName, Date const & theDate,
 		std::string const & Method, std::string const & Uri,
@@ -50,5 +40,4 @@ LogEntry::LogEntry ( std::string const & Ip, std::string const & LogName,
 } //----- Fin de LogEntry
 
 //------------------------------------------------------------------ PRIVE
-
 //----------------------------------------------------- Méthodes protégées

@@ -3,11 +3,8 @@
 #define LINKURIREFERER_H_
 
 //--------------------------------------------------- Interfaces utilisées
-
-//------------------------------------------------------------- Constantes 
-
-//------------------------------------------------------------------ Types 
-
+//------------------------------------------------------------- Constantes
+//------------------------------------------------------------------ Types
 //------------------------------------------------------------------------ 
 // Rôle de la classe <LinkUriReferer>
 // Lien entre un URI et un referer pouvant être ajouté dans une collection
@@ -20,21 +17,17 @@
 struct LinkUriReferer
 {
 //----------------------------------------------------------------- PUBLIC
-    std::string Uri;
-    std::string Referer;
 public:
-
+	std::string Uri;
+    std::string Referer;
 //----------------------------------------------------- Méthodes publiques
-
 //------------------------------------------------- Surcharge d'opérateurs
-
 	bool operator < ( LinkUriReferer const & b) const;
 	// Mode d'emploi :
-	// Dis qui de *this ou de b est le premier dans l'ordre alphanumérique
+	// Dit qui de *this ou de b est le premier dans l'ordre alphanumérique
 	// des URI, et à URI égales dans l'ordre des referer.
 
 //-------------------------------------------- Constructeurs - destructeur
-
 	LinkUriReferer ( std::string const uriParam, std::string const refererParam );
     // Mode d'emploi :
     // Construit un lien entre URI et Referer à partir de deux std::string.
@@ -44,15 +37,10 @@ public:
 	// Mode d'emploi :
 	// Trace la destruction si MAP est définit.
 
-//------------------------------------------------------------------ PRIVE 
-
+//------------------------------------------------------------------ PRIVE
 protected:
 //----------------------------------------------------- Méthodes protégées
-
 //----------------------------------------------------- Attributs protégés
-
 };
-
 //--------------------------- Autres définitions dépendantes de <LinkUriReferer>
-
 #endif // LINKURIREFERER_H_

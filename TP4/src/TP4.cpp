@@ -169,11 +169,6 @@ int main ( int argc, char *argv[] )
 					break;
 			}
 		}
-		
-//		cout << "Option : " << (char)thisOption;
-//		if ( thisArgument.length() > 0 )
-//			cout << " = " << thisArgument;
-//		cout << endl;
 	}
 	
 	if ( showHelp )
@@ -197,7 +192,7 @@ int main ( int argc, char *argv[] )
 		return ERR_ARGS;
 	}
 	
-	
+	// On ouvre le fichier de logs spécifié par l'utilisateur
     ifstream inStream( pathToLogFile );
 	if ( !inStream )
 	{
@@ -206,6 +201,7 @@ int main ( int argc, char *argv[] )
 	}
 	// On instancie et configure le LogAnalyser avec les options passées
 	LogAnalyser analyser( inStream );
+	// TODO : rendre cette RootURL paramétrable par l'utilisateur
 	analyser.SetRootUrl( "http://intranet-if.insa-lyon.fr/" );
 	analyser.SetStripGetParameters( true );
 	analyser.SetExcludeResourceFiles( excludeResourceFiles );
@@ -213,37 +209,28 @@ int main ( int argc, char *argv[] )
 	analyser.SetHourFilter( hourFilter );
 	analyser.SetTopSizeLimit( topHitsSizeLimit );
 	
+	// Analyse des logs
+	// On récupère ainsi le top N
 	TPriorityQueue & topN = analyser.Analyse();
 	THitsByLink & data = analyser.getData();
 	
-	// Test : afficher le nombre total de hits comptabilisés
-	long totalHits = 0;
-	for ( THitsByLink::iterator it = data.begin(); it != data.end(); ++it )
-	{
-		totalHits += it->second;
-	}
-    cout << totalHits << " hits comptés";
-	if ( minimumRefererHits > -1 )
-		cout << " (attention, -l est activé avec minimumRefererHits = " << minimumRefererHits << ")";
-	cout << endl;
-	// Test : afficher le nombre total de hits comptabilisés dans le top
-	totalHits = 0;
-	while ( !topN.empty() )
-	{
-		totalHits += topN.top().second;
-		topN.pop();
-	}
-    cout << totalHits << " hits comptés dans la file" << endl;
-	
-	// TODO : affichage du top N (ou top tout avec l'option -a)
+	// Affichage du top N (voire le top tout avec l'option -a)
+	// TODO
 	
 	// Génération du graphe représentant les parcours (si demandé)
 	if ( graphOutputPath.length() > 0 )
 	{
 		GraphGenerator generator;
-		// TODO : remplacer le path par un ofstream
-		generator.GenerateGraphTo( data, graphOutputPath );
-		cout << "Dot-file generated" << endl;
+		ofstream graphOutputStream( graphOutputPath );
+		if ( graphOutputStream )
+		{
+			generator.GenerateGraphTo( data, graphOutputStream );
+			cout << "Dot-file generated" << endl;
+		}
+		else
+		{
+			cerr << "Impossible d'écrire le graphe dans le fichier " << graphOutputPath << endl;
+		}
 	}
 	
 	return SUCCESS;

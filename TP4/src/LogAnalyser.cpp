@@ -7,6 +7,7 @@
 using namespace std;
 
 //------------------------------------------------------ Include personnel
+#include "LinkUriReferer.h"
 #include "LogAnalyser.h"
 
 //------------------------------------------------------------- Constantes

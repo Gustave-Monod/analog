@@ -90,7 +90,7 @@ protected:
 	
 	// Indique si l'on doit supprimer tous les paramètres GET des URIs
 	bool mStripGetParameters;
-	// Sert à déterminer que /page.html est la même que ROOT_URL + "page.html"
+	// Permet de considérer que /page.html est la même que mRootUrl + "page.html"
 	std::string mRootUrl;
 };
 

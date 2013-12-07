@@ -113,11 +113,11 @@ void ApacheLogParser::SetRootUrl ( string const rootUrl )
 	{
 		mRootUrl = rootUrl;
 	}
-}
+} //----- Fin de SetRootUrl
 void ApacheLogParser::SetStripGetParameters ( bool stripGetParameters )
 {
 	mStripGetParameters = stripGetParameters;
-}
+} //----- Fin de SetStripGetParameters
 
 //------------------------------------------------- Surcharge d'opérateurs
 
@@ -155,7 +155,8 @@ string ApacheLogParser::stripRootUrl ( string const url )
 		}
 	}
 	return result;
-}
+} //----- Fin de stripRootUrl
+
 string ApacheLogParser::stripGetParameters ( string const uri )
 {
 	size_t positionOfGet = uri.find( '?' );
@@ -167,7 +168,8 @@ string ApacheLogParser::stripGetParameters ( string const uri )
 	{
 		return uri;
 	}
-}
+} //----- Fin de stripGetParameters
+
 string ApacheLogParser::stripIndexFilename ( string const uri )
 {
 	string result = uri;
@@ -182,4 +184,4 @@ string ApacheLogParser::stripIndexFilename ( string const uri )
 		result = result.substr(0, position );
 	}
 	return result;
-}
+} //----- Fin de stripIndexFilename
