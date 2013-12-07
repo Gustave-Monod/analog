@@ -18,3 +18,4 @@
 192.168.0.4 - - [08/Sep/2012:11:19:08 +0200] "GET /SiteWebIF/Intranet-etudiant.php HTTP/1.1" 302 477 "http://if.insa-lyon.fr/" "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.1 (KHTML, like Gecko) Chrome/21.0.1180.89 Safari/537.1"
 192.168.0.4 - - [08/Sep/2012:11:19:13 +0200] "GET /SiteWebIF/Intranet-etudiant.php?ticket=ST-341667-KHlNEzic9e5btb4JQ1Nw-dsi-vm03 HTTP/1.1" 302 - "-" "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.1 (KHTML, like Gecko) Chrome/21.0.1180.89 Safari/537.1"
 192.168.0.4 - - [08/Sep/2012:11:19:13 +0200] "GET /SiteWebIF/Intranet-etudiant.php HTTP/1.1" 200 3775 "-" "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.1 (KHTML, like Gecko) Chrome/21.0.1180.89 Safari/537.1"
+192.168.0.4 - - [08/Sep/2012:11:19:08 +0200] "GET /SiteWebIF/Intranet-etudiant.php HTTP/1.1" 302 477 "http://if.insa-lyon.fr/gregrege.html" "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.1 (KHTML, like Gecko) Chrome/21.0.1180.89 Safari/537.1"

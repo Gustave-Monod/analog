@@ -17,8 +17,10 @@ string const theExtensions[] = { "jpg", "jpeg", "png", "gif", "bmp", "js",
 const vector<string> LogAnalyser::EXCLUDE_LIST( theExtensions,
 		theExtensions + 18 );
 
-// TODO: rendre contrôlable par le paramètre -l
+// TODO: rendre contrôlable par le paramètre -n
 unsigned int const DEFAULT_RESULT_SIZE = 10u;
+// TODO: rendre contrôlable par le paramètre -l
+unsigned int const DEFAULT_MINIMUM_NUMBER_OF_HITS = 3u;
 
 //----------------------------------------------------------------- PUBLIC
 
@@ -31,58 +33,66 @@ THitsByLink & LogAnalyser::Analyse ( )
 	// On génère la map à partir du fichier de log, en prenant en compte les options
 	extractAll( );
 
-	THitsByLink::const_iterator it, currentUri;
+	THitsByLink::const_iterator it;
+	string currentUri = "";
 	TUriAndRefererHits pair;
-
-	currentUri = mHits.begin( );
+	
 	// On parcourt toute la map
 	for ( it = mHits.begin( ); it != mHits.end( ); ++it )
 	{
-		// Dans le premier tour, on initialise la paire (uri, #hits)
+		// Dans le premier tour, on initialise la paire (URI, #hits)
 		if ( it == mHits.begin( ) )
 		{
 			pair = make_pair( it->first.Uri, it->second );
+			currentUri = pair.first;
 			continue;
 		}
-
-		// Ensuite, on augmente le nombre de hits totaux pour des URI égales
-		if ( currentUri->first.Uri == it->first.Uri )
+		
+		// Si cette ligne pointe encore vers la même URI, on ajoute les hits
+		if ( currentUri == it->first.Uri )
 		{
 			pair.second = pair.second + it->second;
 		}
-		// Si les URI sont différentes, c'est qu'on a fini la somme
+		// Si les URI sont différentes, ou que l'on est à la fin du parcours,
+		// c'est qu'on a compté tous les hits vers cette URI.
+		// Ils sont pour le moment stockés dans pair.second.
 		else
 		{
-			// TODO Si on est >= nombre minimum de hits (-l)
-//			if ( pair.second >= nombreMinimum )
-//			{
-				// On insère le nombre total de hits dans la file
+			// TOOD : avec -l, on ne compte cette URI que si elle a un referer
+			// lui fournissant #hits > minimum
+			if ( true ) // pair.second >= DEFAULT_MINIMUM_NUMBER_OF_HITS )
+			{
+				// On insère le nombre total de hits pour cette URI dans la file
 				mUrisByHits.push( pair );
-				// Si on dépasse la taille souhaitée (ex 10 plus grands)
-//				if ( mUrisByHits.size( ) > DEFAULT_RESULT_SIZE )
-//				{
-//					// On enlève celui avec le score le moins bon
-//					mUrisByHits.pop( );
-//				}
-//			}
-			// TODO On efface tout de la map
-//			else
-//			{
-//			}
-			// On remet la paire à la valeur nécessaire pour la prochaine URI
+				// Si la file dépasse la taille maximale demandée (ex 10 plus grands),
+				// on fait sauter la dernière URI de la file (la moins bonne)
+				if ( mUrisByHits.size( ) > 50 ) // DEFAULT_RESULT_SIZE
+				{
+					mUrisByHits.pop( );
+				}
+			}
+			// TODO : Effacer tout ce qui concerne l'URI que l'on vient de traiter
+			// dans la map
+			
+			// On passe à la prochaine URI
+			currentUri = it->first.Uri;
 			pair = make_pair( it->first.Uri, it->second );
 		}
+		//cout << it->first.Uri << " <- " << it->first.Referer << " : " << it->second << endl;
 	}
-	// TODO: enlever (trace de test) et en plus la file est vidée
-    long sum = 0;
-	while ( !mUrisByHits.empty( ) )
+	
+	// TODO : traiter la dernière ligne, en particulier dans le cas où
+	// elle porte sur une URI différente
+	
+	// Test : afficher le nombre total de hits comptabilisés
+	// TODO : supprimer ce test
+	long totalHits = 0;
+	while (!mUrisByHits.empty())
 	{
-		TUriAndRefererHits pair = mUrisByHits.top( );
-//		cout << pair.first << " " << pair.second << endl;
-        sum += pair.second;
-		mUrisByHits.pop( );
+		totalHits += mUrisByHits.top().second;
+		mUrisByHits.pop();
 	}
-    cout << sum << " hits comptés." << endl;
+    cout << totalHits << " hits comptés dans la file." << endl;
 	
 	return mHits;
 } //----- Fin de Analyse
@@ -117,6 +127,7 @@ void LogAnalyser::extractAll ( )
 // Algorithme :
 // Lit tant qu'il reste à lire et traite seulement si nécessaire.
 {
+	long compteur = 0;
 	while ( mParser.HasMoreToParse( ) )
 	{
 		LogEntry e = mParser.ParseLine( );
@@ -127,8 +138,10 @@ void LogAnalyser::extractAll ( )
 						&& ( !mExcludeResourceFiles || hasValidExtension( e ) ) ) )
 		{
 			addHit( e );
+			++compteur;
 		}
 	}
+	cout << compteur << " lignes extraites des logs." << endl;
 } //----- Fin de extractAll
 
 void LogAnalyser::addHit ( LogEntry & e )
@@ -136,13 +149,12 @@ void LogAnalyser::addHit ( LogEntry & e )
     // On cherche le couple uri <- referer
     LinkUriReferer l (e.uri, e.referer);
 	THitsByLink::iterator it = mHits.find( l );
-
+	
     // S'il n'existe pas, on l'insère
 	if ( it == mHits.end( ) )
 	{
 		mHits.insert( make_pair( LinkUriReferer( e.uri, e.referer ), 1u ) );
 	}
-
     // Sinon, on incrémente le nombre de hits pour ce couple
 	else
 	{
