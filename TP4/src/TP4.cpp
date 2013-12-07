@@ -2,6 +2,7 @@
 #include <fstream>
 #include <sstream>
 #include <algorithm>
+#include <stack>
 #include "unistd.h"
 
 #include "LogAnalyser.h"
@@ -217,13 +218,23 @@ int main ( int argc, char *argv[] )
 	// Affichage du top N
 	if ( topHitsSizeLimit != 0 )
 	{
-		// TODO : se débrouiller pour afficher le top N en ordre décroissant
+		stack<string> topNOutput;
+		ostringstream line;
 		while ( !topN.empty() )
 		{
 			// TODO : bugfix : avec -l, les bonnes URI apparaissent mais leur nombre de hit est erroné
-			// (vient probablement de la fonction LogAnalyser::Analyse
-			cout << topN.top().first << " (" << topN.top().second << " hits)" << endl;
+			// (vient probablement de la fonction LogAnalyser::Analyse)
+			line.str("");
+			line.clear();
+			line << topN.top().first << " (" << topN.top().second  << " hits)";
+			topNOutput.push(line.str());
+			
 			topN.pop();
+		}
+		while ( !topNOutput.empty() )
+		{
+			cout << topNOutput.top() << endl;
+			topNOutput.pop();
 		}
 	}
 	

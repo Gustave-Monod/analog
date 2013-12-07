@@ -18,9 +18,9 @@ class UriAndHitsGreater
 public:
 	// On trie le plus souvent en ordre inverse pour pouvoir enlever
 	// facilement les éléments avec le nombre de hits le plus bas
-	// (ils se retrouveront naturellement en bout de fil, on pourra les
+	// (ils se retrouveront naturellement en bout de file, on pourra les
 	// supprimer d'un simple pop)
-	UriAndHitsGreater ( const bool descending = false )
+	UriAndHitsGreater ( const bool descending = true )
 	: mDescending( descending )
 	{
 	}
