@@ -88,8 +88,7 @@ int main ( int argc, char *argv[] )
 	bool excludeResourceFiles = false;
 	int minimumRefererHits = -1;
 	int hourFilter = -1;
-	int topHitsSizeLimit = -1;
-	bool showAll = false;
+	int topHitsSizeLimit = 10;
 	
 	bool argumentsNotValid = false;
 	// Pas assez d'arguments passés
@@ -163,7 +162,8 @@ int main ( int argc, char *argv[] )
 					excludeResourceFiles = true;
 					break;
 				case 'a':
-					showAll = true;
+					// Taille du top illimitée
+					topHitsSizeLimit = -1;
 					break;
 				default:
 					break;
@@ -214,8 +214,18 @@ int main ( int argc, char *argv[] )
 	TPriorityQueue & topN = analyser.Analyse();
 	THitsByLink & data = analyser.getData();
 	
-	// Affichage du top N (voire le top tout avec l'option -a)
-	// TODO
+	// Affichage du top N
+	if ( topHitsSizeLimit != 0 )
+	{
+		// TODO : se débrouiller pour afficher le top N en ordre décroissant
+		while ( !topN.empty() )
+		{
+			// TODO : bugfix : avec -l, les bonnes URI apparaissent mais leur nombre de hit est erroné
+			// (vient probablement de la fonction LogAnalyser::Analyse
+			cout << topN.top().first << " (" << topN.top().second << " hits)" << endl;
+			topN.pop();
+		}
+	}
 	
 	// Génération du graphe représentant les parcours (si demandé)
 	if ( graphOutputPath.length() > 0 )
@@ -225,7 +235,7 @@ int main ( int argc, char *argv[] )
 		if ( graphOutputStream )
 		{
 			generator.GenerateGraphTo( data, graphOutputStream );
-			cout << "Dot-file generated" << endl;
+			cout << "Dot-file " << graphOutputPath << " generated" << endl;
 		}
 		else
 		{

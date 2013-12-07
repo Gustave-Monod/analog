@@ -44,7 +44,7 @@ TPriorityQueue & LogAnalyser::Analyse ( )
 	{
 		// Option -l : pour qu'une URI fasse partie des résultats, elle doit avoir au moins
 		// un certain nombre de hits fournis par un de ses referers à lui tout seul
-		if ( it->second > mMinimumRefererHits )
+		if ( it->second >= mMinimumRefererHits )
 		{
 			isSignificant = true;
 		}
@@ -53,7 +53,6 @@ TPriorityQueue & LogAnalyser::Analyse ( )
 		if ( it->first.Uri == currentPair.first )
 		{
 			currentPair.second += it->second;
-			
 		}
 		// Sinon, c'est le moment de faire une insertion dans le top
 		else
@@ -153,7 +152,6 @@ void LogAnalyser::extractAll ( )
 // Algorithme :
 // Lit tant qu'il reste à lire et traite seulement si nécessaire.
 {
-	long compteur = 0;
 	while ( mParser.HasMoreToParse( ) )
 	{
 		LogEntry e = mParser.ParseLine( );
@@ -164,10 +162,8 @@ void LogAnalyser::extractAll ( )
 						&& ( !mExcludeResourceFiles || hasValidExtension( e ) ) ) )
 		{
 			addHit( e );
-			++compteur;
 		}
 	}
-	cout << compteur << " lignes extraites des logs." << endl;
 } //----- Fin de extractAll
 
 void LogAnalyser::addHit ( LogEntry & e )
