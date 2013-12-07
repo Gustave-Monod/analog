@@ -17,96 +17,93 @@ string const theExtensions[] = { "jpg", "jpeg", "png", "gif", "bmp", "js",
 const vector<string> LogAnalyser::EXCLUDE_LIST( theExtensions,
 		theExtensions + 18 );
 
-// TODO: rendre contrôlable par le paramètre -n
-unsigned int const DEFAULT_RESULT_SIZE = 10u;
-// TODO: rendre contrôlable par le paramètre -l
-unsigned int const DEFAULT_MINIMUM_NUMBER_OF_HITS = 3u;
-
 //----------------------------------------------------------------- PUBLIC
 
 //----------------------------------------------------- Méthodes publiques
-THitsByLink & LogAnalyser::Analyse ( )
+TPriorityQueue & LogAnalyser::Analyse ( )
 // Extrait tout et parcourt la map pour créer la file à priorité :
 // Pour chaque entrée de la map avec la même URI (la map est triée par URI,
 // et à URI égales par referer) on agrège le nombre de hits (somme).
 {
-	// On génère la map à partir du fichier de log, en prenant en compte les options
+	// On génère la map à partir du fichier de log, en prenant en compte
+	// les éventuelles options de filtrage
 	extractAll( );
-
-	THitsByLink::const_iterator it;
-	string currentUri = "";
-	TUriAndRefererHits pair;
 	
+	if ( mHits.size() < 1 )
+	{
+		return topHits;
+	}
+	
+	THitsByLink::const_iterator it, firstLineForThisUri;
+	firstLineForThisUri = mHits.begin();
+	TUriAndRefererHits currentPair = make_pair( mHits.begin()->first.Uri, mHits.begin()->second );
+	bool isSignificant = false;
 	// On parcourt toute la map
 	for ( it = mHits.begin( ); it != mHits.end( ); ++it )
 	{
-		// Dans le premier tour, on initialise la paire (URI, #hits)
-		if ( it == mHits.begin( ) )
+		// Option -l : pour qu'une URI fasse partie des résultats, elle doit avoir au moins
+		// un certain nombre de hits fournis par un de ses referers à lui tout seul
+		if ( it->second > mMinimumRefererHits )
 		{
-			pair = make_pair( it->first.Uri, it->second );
-			currentUri = pair.first;
-			continue;
+			isSignificant = true;
 		}
 		
-		// Si cette ligne pointe encore vers la même URI, on ajoute les hits
-		if ( currentUri == it->first.Uri )
+		// Si cette ligne pointe vers la même URI que la précédente, on ajoute ces hits au total
+		if ( it->first.Uri == currentPair.first )
 		{
-			pair.second = pair.second + it->second;
+			currentPair.second += it->second;
 		}
-		// Si les URI sont différentes, ou que l'on est à la fin du parcours,
-		// c'est qu'on a compté tous les hits vers cette URI.
-		// Ils sont pour le moment stockés dans pair.second.
+		// Sinon, c'est le moment de faire une insertion dans le top
 		else
 		{
-			// TOOD : avec -l, on ne compte cette URI que si elle a un referer
-			// lui fournissant #hits > minimum
-			if ( true ) // pair.second >= DEFAULT_MINIMUM_NUMBER_OF_HITS )
+			// Option -l : si l'URI précédente n'a pas satisfait la condition,
+			// on efface de la map tout ce qui la concerne
+			if ( mMinimumRefererHits > -1 && !isSignificant )
 			{
-				// On insère le nombre total de hits pour cette URI dans la file
-				mUrisByHits.push( pair );
-				// Si la file dépasse la taille maximale demandée (ex 10 plus grands),
-				// on fait sauter la dernière URI de la file (la moins bonne)
-				if ( mUrisByHits.size( ) > 50 ) // DEFAULT_RESULT_SIZE
-				{
-					mUrisByHits.pop( );
-				}
+				mHits.erase(firstLineForThisUri, it);
 			}
-			// TODO : Effacer tout ce qui concerne l'URI que l'on vient de traiter
-			// dans la map
+			// Sinon on peut l'insérer dans le top
+			else
+			{
+				insertInTopHits ( currentPair );
+			}
 			
 			// On passe à la prochaine URI
-			currentUri = it->first.Uri;
-			pair = make_pair( it->first.Uri, it->second );
+			currentPair = make_pair ( it->first.Uri, it->second );
+			firstLineForThisUri = it;
+			isSignificant = false;
 		}
-		//cout << it->first.Uri << " <- " << it->first.Referer << " : " << it->second << endl;
 	}
-	
-	// TODO : traiter la dernière ligne, en particulier dans le cas où
-	// elle porte sur une URI différente
-	
-	// Test : afficher le nombre total de hits comptabilisés
-	// TODO : supprimer ce test
-	long totalHits = 0;
-	while (!mUrisByHits.empty())
+	// On maintenant traite la dernière ligne de la map
+	if ( mMinimumRefererHits > -1 && !isSignificant )
 	{
-		totalHits += mUrisByHits.top().second;
-		mUrisByHits.pop();
+		mHits.erase(firstLineForThisUri, it);
 	}
-    cout << totalHits << " hits comptés dans la file." << endl;
+	else
+	{
+		insertInTopHits ( currentPair );
+	}
 	
-	return mHits;
+	return topHits;
 } //----- Fin de Analyse
+
+THitsByLink & LogAnalyser::getData ( )
+{
+	return mHits;
+} //----- Fin de getData
 
 //------------------------------------------------- Surcharge d'opérateurs
 
 //-------------------------------------------- Constructeurs - destructeur
 
 LogAnalyser::LogAnalyser ( istream & inStream, bool excludeResourceFiles,
-		int hourFilter )
+		int hourFilter, int minimumRefererHits )
 		: mParser( inStream ), mExcludeResourceFiles( excludeResourceFiles ),
-			mHourFilter( hourFilter ), mHits( ),
-			mUrisByHits( UriAndHitsGreater( ) )
+			mHourFilter( hourFilter ), mMinimumRefererHits( minimumRefererHits ),
+			mHits( ), topHits( UriAndHitsGreater( ) )
 {
+	mTopSizeLimit = DEFAULT_TOP_SIZE_LIMIT;
+	
 #ifdef MAP
 	cout << "Appel au constructeur de <LogAnalyser>" << endl;
 #endif
@@ -161,6 +158,18 @@ void LogAnalyser::addHit ( LogEntry & e )
 		++( it->second );
 	}
 } //----- Fin de addHit
+
+void LogAnalyser::insertInTopHits ( TUriAndRefererHits & pair )
+{
+	// On insère le nombre total de hits pour cette URI dans la file
+	topHits.push( pair );
+	// Si la file dépasse la taille maximale demandée (ex 10 plus grands),
+	// on fait sauter la dernière URI de la file (la moins bonne)
+	if ( topHits.size( ) > mTopSizeLimit )
+	{
+		topHits.pop( );
+	}
+} //----- Fin de insertInQueueIfNecessary
 
 bool LogAnalyser::hasValidExtension ( LogEntry& logEntry )
 {

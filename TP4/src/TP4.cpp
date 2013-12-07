@@ -111,11 +111,35 @@ int main ( int argc, char *argv[] )
 	// ifstream inStream( "/shares/binomes/B3109/oo/analog/small.log" );
     ifstream inStream( "/Users/Merlin/Documents/Cours/3IF/OO/analog/small.log" );
 	// Par défaut, pas de filtrage d'extension ni d'heure
-	LogAnalyser analyser( inStream, false, -1 );
-	THitsByLink & data = analyser.Analyse();
 	
-	// On s'occuppe maintenant de générer le graphe représentant le parcours
+	LogAnalyser analyser( inStream, false, -1 );
+	// TODO : configurer l'analyser selon les options
+	
+	
+	TPriorityQueue & topN = analyser.Analyse();
+	THitsByLink & data = analyser.getData();
+	
+	// Test : afficher le nombre total de hits comptabilisés
+	long totalHits = 0;
+	for ( THitsByLink::iterator it = data.begin(); it != data.end(); ++it )
+	{
+		totalHits += it->second;
+	}
+    cout << totalHits << " hits comptés (attention, -l peut être activé)." << endl;
+	// Test : afficher le nombre total de hits comptabilisés dans le top
+	totalHits = 0;
+	while ( !topN.empty() )
+	{
+		totalHits += topN.top().second;
+		topN.pop();
+	}
+    cout << totalHits << " hits comptés dans la file." << endl;
+
+	
+	// On s'occuppe maintenant de générer le graphe représentant les parcours
 	GraphGenerator generator;
+	// TODO : prendre en compte le nom du fichier de sortie donné en paramètre
 	generator.GenerateGraphTo( data, "out.dot" );
+	
 	return SUCCESS;
 }

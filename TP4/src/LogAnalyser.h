@@ -57,18 +57,18 @@ class LogAnalyser
 
 public:
 //----------------------------------------------------- Méthodes publiques
-	THitsByLink & Analyse ( );
+	TPriorityQueue & Analyse ( );
 	// Mode d'emploi :
-	// Analyse
-	// Retourne la map contenant toutes les informations extraites des logs.
-	// Contrat :
-	//
+	// Analyse les logs et construit un top N des URIs (en nombre de hits).
+	// Retourne la file à priorité contenant le top N.
+	
+	THitsByLink & getData ( );
 
 //------------------------------------------------- Surcharge d'opérateurs
 //-------------------------------------------- Constructeurs - destructeur
 
 	LogAnalyser ( std::istream & inStream, bool excludeResourceFiles = false,
-			int hourFilter = -1 );
+			int hourFilter = -1, int minimumRefererHits = -1 );
 	// Mode d'emploi :
 	// Trace la construction.
 
@@ -91,7 +91,12 @@ protected:
 	// Ajoute un (1) au nombre de hits pour un lien donné.
 	// Si la LogEntry n'a pas encore été lue, on l'insère avec
 	// un (1) seul hit.
-
+	
+	void insertInTopHits ( TUriAndRefererHits & pair );
+	// Mode d'emploi :
+	// Ajoute un couple (URI, #hits) au top (mUrisByHits) en respectant
+	// l'éventuelle option -n qui limite la taille maximale du top.
+	
 	bool hasValidExtension ( LogEntry & logEntry );
 	// Mode d'emploi :
 	// Compare l'extension de l'URI contenue dans cette LogEntry
@@ -103,14 +108,17 @@ protected:
 	ApacheLogParser mParser;
 	bool mExcludeResourceFiles;
 	int mHourFilter;
+	int mMinimumRefererHits;
+	int mTopSizeLimit;
 
 	THitsByLink mHits;
 
-	TPriorityQueue mUrisByHits;
+	TPriorityQueue topHits;
 
 	static const std::vector<std::string> EXCLUDE_LIST;
 
-	static unsigned int const DEFAULT_RESULT_SIZE;
+	static unsigned int const DEFAULT_TOP_SIZE_LIMIT = 10;
+	
 };
 
 //--------------------------- Autres définitions dépendantes de <LogAnalyser>
