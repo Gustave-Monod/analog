@@ -1,7 +1,7 @@
 ../analog -b;
 ../analog -c;
 ../analog -v -d -s -z -e -f;
-../analog -v bonjour -u;
+../analog -bonjour -u;
 ../analog --n-existe-pas;
 ../analog --sert-a-rien;
 ../analog --les-deux -bref vous aurez compris;
