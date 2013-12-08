@@ -1,0 +1,1 @@
+../analog -t 0 -g graph.dot 6-links.log

@@ -1,1 +1,1 @@
-../analog -g not-writable.dot 40-links.log
+../analog -g non-existant-directory/out.dot 40-links.log

@@ -1,0 +1,1 @@
+When using (-t #), all hits that have not taken place at hour # should be ignored.

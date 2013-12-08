@@ -1,0 +1,1 @@
+When using (-a), the program should output one line per distinct uri present in the log file (the order is not specified).

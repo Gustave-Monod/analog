@@ -1,0 +1,2 @@
+When using (-l #) with (-g), nodes that do not have a link with more than # hits (>=)
+should not appear. No link with strictly less than # hits should appear.

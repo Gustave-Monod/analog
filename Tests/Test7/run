@@ -1,0 +1,1 @@
+../analog -x -g graph.dot 42-links.log

@@ -1,0 +1,7 @@
+digraph {
+"/A-(40-Links)";
+"-";
+"-" -> "/A-(40-Links)"[label="40"];
+"/B-(10-Links)";
+"-" -> "/B-(10-Links)"[label="10"];
+}
