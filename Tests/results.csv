@@ -2,4 +2,6 @@ Test ID;Return code validation;Out result;StdErr result;File creation result;Glo
 Test1;Passed;Not tested;Passed;Not tested;1
 Test2;Passed;Not tested;Passed;Not tested;1
 Test3;Passed;Not tested;Passed;Not tested;1
-Test4;Failed;Not tested;Failed;Not tested;0
+Test4;Passed;Not tested;Passed;Not tested;1
+Test5;Passed;Passed;Passed;Not tested;1
+Test6;Passed;Passed;Not tested;Not tested;1

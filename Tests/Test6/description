@@ -1,0 +1,3 @@
+Verifies what happens when the log file is easy to understand.
+
+(std err should be empty, how to test this?)

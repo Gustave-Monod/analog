@@ -12,7 +12,7 @@ using namespace std;
 
 enum TReturnCode
 {
-	SUCCESS, ERR_ARGS, ERR_READ, ERR_EMPTY, ERR_FORMAT, ERR_WRITE
+	SUCCESS, ERR_ARGS, ERR_READ, ERR_FORMAT, ERR_WRITE
 };
 
 void afficherTest ( int numero, bool resultat )
@@ -196,9 +196,10 @@ int main ( int argc, char *argv[] )
 	// On ouvre le fichier de logs spécifié par l'utilisateur
 	ifstream inStream( pathToLogFile );
 	inStream >> ws;
+	inStream.peek( );
 	if ( !inStream )
 	{
-		cerr << "Fichier vide ou introuvable (" << pathToLogFile << ")." << endl;
+		cerr << "Fichier vide ou introuvable (" << pathToLogFile << ")" << endl;
 		return ERR_READ;
 	}
 	// On instancie et configure le LogAnalyser avec les options passées
@@ -244,7 +245,7 @@ int main ( int argc, char *argv[] )
 	// Génération du graphe représentant les parcours (si demandé)
 	if ( graphOutputPath.length() > 0 )
 	{
-		GraphGenerator generator;
+		GraphGenerator generator;	
 		ofstream graphOutputStream( graphOutputPath );
 		if ( graphOutputStream )
 		{
