@@ -195,16 +195,11 @@ int main ( int argc, char *argv[] )
 	
 	// On ouvre le fichier de logs spécifié par l'utilisateur
 	ifstream inStream( pathToLogFile );
-	if ( !inStream )
-	{
-		cerr << "Impossible de lire le fichier de log " << pathToLogFile << endl;
-		return ERR_READ;
-	}
 	inStream >> ws;
 	if ( !inStream )
 	{
-		cerr << "Fichier vide (" << pathToLogFile << ")." << endl;
-		return ERR_EMPTY;
+		cerr << "Fichier vide ou introuvable (" << pathToLogFile << ")." << endl;
+		return ERR_READ;
 	}
 	// On instancie et configure le LogAnalyser avec les options passées
 	LogAnalyser analyser( inStream );
