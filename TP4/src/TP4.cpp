@@ -251,6 +251,7 @@ int main ( int argc, char *argv[] )
 		else
 		{
 			cerr << "Impossible d'écrire le graphe dans le fichier " << graphOutputPath << endl;
+			return ERR_WRITE;
 		}
 	}
 	
