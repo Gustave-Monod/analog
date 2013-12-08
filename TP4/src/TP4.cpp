@@ -226,8 +226,6 @@ int main ( int argc, char *argv[] )
 		ostringstream line;
 		while ( !topN.empty() )
 		{
-			// TODO : bugfix : avec -l, les bonnes URI apparaissent mais leur nombre de hit est erroné
-			// (vient probablement de la fonction LogAnalyser::Analyse)
 			line.str("");
 			line.clear();
 			line << topN.top().first << " (" << topN.top().second  << " hits)";
