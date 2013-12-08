@@ -32,23 +32,13 @@ TPriorityQueue & LogAnalyser::Analyse ( )
 	
 	if ( mHits.size() < 1 )
 	{
-		return topHits;
+		return mTopHits;
 	}
 	
-	THitsByLink::const_iterator it, firstLineForThisUri;
-	firstLineForThisUri = mHits.begin();
-	TUriAndRefererHits currentPair = make_pair( mHits.begin()->first.Uri, mHits.begin()->second );
-	bool isSignificant = false;
+	TUriAndRefererHits currentPair = make_pair( mHits.begin()->first.Uri, 0 );
 	// On parcourt toute la map
-	for ( it = mHits.begin( ); it != mHits.end( ); ++it )
+	for ( THitsByLink::iterator it = mHits.begin( ); it != mHits.end( ); /* pas d'incrémentation */)
 	{
-		// Option -l : pour qu'une URI fasse partie des résultats, elle doit avoir au moins
-		// un certain nombre de hits fournis par un de ses referers à lui tout seul
-		if ( it->second >= mMinimumRefererHits )
-		{
-			isSignificant = true;
-		}
-		
 		// Si cette ligne pointe vers la même URI que la précédente, on ajoute ces hits au total
 		if ( it->first.Uri == currentPair.first )
 		{
@@ -57,35 +47,27 @@ TPriorityQueue & LogAnalyser::Analyse ( )
 		// Sinon, c'est le moment de faire une insertion dans le top
 		else
 		{
-			// Option -l : si l'URI précédente n'a pas satisfait la condition,
-			// on efface de la map tout ce qui la concerne
-			if ( mMinimumRefererHits > -1 && !isSignificant )
-			{
-				mHits.erase(firstLineForThisUri, it);
-			}
-			// Sinon on peut l'insérer dans le top
-			else
-			{
-				insertInTopHits ( currentPair );
-			}
+			insertInTopHits ( currentPair );
 			
-			// On passe à la prochaine URI
+			// On passe à cette nouvelle URI
 			currentPair = make_pair ( it->first.Uri, it->second );
-			firstLineForThisUri = it;
-			isSignificant = false;
+		}
+		// Option -l : pour qu'un lien survive dans les résultats, il doit porter
+		// au moins mMinimumRefererHits
+		if ( (int)it->second < mMinimumRefererHits )
+		// ATTENTION : ne pas comparer des uint avec des int...
+		{
+			mHits.erase( it++ );
+		}
+		else
+		{
+			++it;
 		}
 	}
 	// On maintenant traite la dernière ligne de la map
-	if ( mMinimumRefererHits > -1 && !isSignificant )
-	{
-		mHits.erase(firstLineForThisUri, it);
-	}
-	else
-	{
-		insertInTopHits ( currentPair );
-	}
-	
-	return topHits;
+	insertInTopHits ( currentPair );
+		
+	return mTopHits;
 } //----- Fin de Analyse
 
 THitsByLink & LogAnalyser::getData ( )
@@ -128,7 +110,7 @@ LogAnalyser::LogAnalyser ( istream & inStream, bool excludeResourceFiles,
 		int hourFilter, int minimumRefererHits )
 		: mParser( inStream ), mExcludeResourceFiles( excludeResourceFiles ),
 			mHourFilter( hourFilter ), mMinimumRefererHits( minimumRefererHits ),
-			mHits( ), topHits( UriAndHitsGreater( ) )
+			mHits( ), mTopHits( UriAndHitsGreater( ) )
 {
 	mTopSizeLimit = DEFAULT_TOP_SIZE_LIMIT;
 	
@@ -187,12 +169,12 @@ void LogAnalyser::addHit ( LogEntry & e )
 void LogAnalyser::insertInTopHits ( TUriAndRefererHits & pair )
 {
 	// On insère le nombre total de hits pour cette URI dans la file
-	topHits.push( pair );
+	mTopHits.push( pair );
 	// Si la file dépasse la taille maximale demandée (ex 10 plus grands),
 	// on fait sauter la dernière URI de la file (la moins bonne)
-	if ( topHits.size( ) > mTopSizeLimit )
+	if ( mTopHits.size( ) > mTopSizeLimit )
 	{
-		topHits.pop( );
+		mTopHits.pop( );
 	}
 } //----- Fin de insertInQueueIfNecessary
 

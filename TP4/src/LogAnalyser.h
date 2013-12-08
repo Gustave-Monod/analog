@@ -81,7 +81,7 @@ protected:
 
 	ApacheLogParser mParser;
 	THitsByLink mHits;
-	TPriorityQueue topHits;
+	TPriorityQueue mTopHits;
 	
 	static const std::vector<std::string> EXCLUDE_LIST;
 	static unsigned int const DEFAULT_TOP_SIZE_LIMIT = 10;

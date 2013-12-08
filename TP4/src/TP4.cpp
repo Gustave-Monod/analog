@@ -218,6 +218,8 @@ int main ( int argc, char *argv[] )
 	// Affichage du top N
 	if ( topHitsSizeLimit != 0 )
 	{
+		// Pour afficher en ordre décroissant, on renverse notre file à priorités
+		// dans une pile, que l'on affiche ensuite
 		stack<string> topNOutput;
 		ostringstream line;
 		while ( !topN.empty() )

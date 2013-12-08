@@ -63,3 +63,7 @@ local.properties
 Tests/results.csv
 
 Tests/out.png
+
+Tests/out.dot
+
+Tests/analog_merlin
