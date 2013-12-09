@@ -17,18 +17,19 @@ bool LinkUriReferer::operator < ( LinkUriReferer const & b ) const
 } //----- Fin de operator <
 
 //-------------------------------------------- Constructeurs - destructeur
-LinkUriReferer::LinkUriReferer ( string const uriParam, string const refererParam )
-: Uri(uriParam), Referer(refererParam)
+LinkUriReferer::LinkUriReferer ( string const uriParam,
+		string const refererParam )
+		: Uri( uriParam ), Referer( refererParam )
 {
 #ifdef MAP
-    cout << "Appel au constructeur de <LinkUriReferer>" << endl;
+	cout << "Appel au constructeur de <LinkUriReferer>" << endl;
 #endif
 } //----- Fin de LinkUriReferer ( string const, string const )
 
 LinkUriReferer::~LinkUriReferer ( )
 {
 #ifdef MAP
-    cout << "Appel au destructeur de <LinkUriReferer>" << endl;
+	cout << "Appel au destructeur de <LinkUriReferer>" << endl;
 #endif
 } //----- Fin de ~LinkUriReferer
 

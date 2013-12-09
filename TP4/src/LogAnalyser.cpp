@@ -30,16 +30,18 @@ TPriorityQueue & LogAnalyser::Analyse ( )
 	// les éventuelles options de filtrage
 	extractAll( );
 	
-	if ( mHits.size() < 1 )
+	if ( mHits.size( ) < 1 )
 	{
 		return mTopHits;
 	}
 	
-	TUriAndRefererHits currentPair = make_pair( mHits.begin()->first.Uri, 0 );
+	TUriAndRefererHits currentPair = make_pair( mHits.begin( )->first.Uri, 0 );
 	// On parcourt toute la map
-	for ( THitsByLink::iterator it = mHits.begin( ); it != mHits.end( ); /* pas d'incrémentation */)
+	for ( THitsByLink::iterator it = mHits.begin( ); it != mHits.end( );
+	/* pas d'incrémentation */)
 	{
-		// Si cette ligne pointe vers la même URI que la précédente, on ajoute ces hits au total
+		// Si cette ligne pointe vers la même URI que la précédente
+		// on ajoute ces hits au total
 		if ( it->first.Uri == currentPair.first )
 		{
 			currentPair.second += it->second;
@@ -47,14 +49,14 @@ TPriorityQueue & LogAnalyser::Analyse ( )
 		// Sinon, c'est le moment de faire une insertion dans le top
 		else
 		{
-			insertInTopHits ( currentPair );
+			insertInTopHits( currentPair );
 			
 			// On passe à cette nouvelle URI
-			currentPair = make_pair ( it->first.Uri, it->second );
+			currentPair = make_pair( it->first.Uri, it->second );
 		}
-		// Option -l : pour qu'un lien survive dans les résultats, il doit porter
-		// au moins mMinimumRefererHits
-		if ( (int)it->second < mMinimumRefererHits )
+		// Option -l : pour qu'un lien survive dans les résultats,
+		// il doit porter au moins mMinimumRefererHits
+		if ( (int) it->second < mMinimumRefererHits )
 		// ATTENTION : ne pas comparer des uint avec des int...
 		{
 			mHits.erase( it++ );
@@ -65,8 +67,8 @@ TPriorityQueue & LogAnalyser::Analyse ( )
 		}
 	}
 	// On maintenant traite la dernière ligne de la map
-	insertInTopHits ( currentPair );
-		
+	insertInTopHits( currentPair );
+
 	return mTopHits;
 } //----- Fin de Analyse
 
@@ -109,8 +111,9 @@ void LogAnalyser::SetTopSizeLimit ( int topSizeLimit )
 LogAnalyser::LogAnalyser ( istream & inStream, bool excludeResourceFiles,
 		int hourFilter, int minimumRefererHits )
 		: mParser( inStream ), mExcludeResourceFiles( excludeResourceFiles ),
-			mHourFilter( hourFilter ), mMinimumRefererHits( minimumRefererHits ),
-			mHits( ), mTopHits( UriAndHitsGreater( ) )
+			mHourFilter( hourFilter ),
+			mMinimumRefererHits( minimumRefererHits ), mHits( ),
+			mTopHits( UriAndHitsGreater( ) )
 {
 	mTopSizeLimit = DEFAULT_TOP_SIZE_LIMIT;
 	
@@ -150,16 +153,16 @@ void LogAnalyser::extractAll ( )
 
 void LogAnalyser::addHit ( LogEntry & e )
 {
-    // On cherche le couple uri <- referer
-    LinkUriReferer l (e.uri, e.referer);
+	// On cherche le couple uri <- referer
+	LinkUriReferer l( e.uri, e.referer );
 	THitsByLink::iterator it = mHits.find( l );
 	
-    // S'il n'existe pas, on l'insère
+	// S'il n'existe pas, on l'insère
 	if ( it == mHits.end( ) )
 	{
 		mHits.insert( make_pair( LinkUriReferer( e.uri, e.referer ), 1u ) );
 	}
-    // Sinon, on incrémente le nombre de hits pour ce couple
+	// Sinon, on incrémente le nombre de hits pour ce couple
 	else
 	{
 		++( it->second );

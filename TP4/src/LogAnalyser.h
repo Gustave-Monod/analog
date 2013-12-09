@@ -28,7 +28,7 @@ public:
 	// Retourne la file à priorité contenant le top N.
 	
 	THitsByLink & getData ( );
-	
+
 	// Paramétrage de ApacheLogParser
 	void SetRootUrl ( std::string const rootUrl );
 	void SetStripGetParameters ( bool stripGetParameters );
@@ -82,10 +82,10 @@ protected:
 	ApacheLogParser mParser;
 	THitsByLink mHits;
 	TPriorityQueue mTopHits;
-	
+
 	static const std::vector<std::string> EXCLUDE_LIST;
 	static unsigned int const DEFAULT_TOP_SIZE_LIMIT = 10;
-	
+
 	bool mExcludeResourceFiles;
 	int mHourFilter;
 	int mMinimumRefererHits;

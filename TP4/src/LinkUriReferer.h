@@ -19,18 +19,19 @@ struct LinkUriReferer
 //----------------------------------------------------------------- PUBLIC
 public:
 	std::string Uri;
-    std::string Referer;
+	std::string Referer;
 //----------------------------------------------------- Méthodes publiques
 //------------------------------------------------- Surcharge d'opérateurs
-	bool operator < ( LinkUriReferer const & b) const;
+	bool operator < ( LinkUriReferer const & b ) const;
 	// Mode d'emploi :
 	// Dit qui de *this ou de b est le premier dans l'ordre alphanumérique
 	// des URI, et à URI égales dans l'ordre des referer.
 
 //-------------------------------------------- Constructeurs - destructeur
-	LinkUriReferer ( std::string const uriParam, std::string const refererParam );
-    // Mode d'emploi :
-    // Construit un lien entre URI et Referer à partir de deux std::string.
+	LinkUriReferer ( std::string const uriParam,
+			std::string const refererParam );
+	// Mode d'emploi :
+	// Construit un lien entre URI et Referer à partir de deux std::string.
 
 	/* pas virtual <=> pas d'allocation dynamique ici */
 	~LinkUriReferer ( );

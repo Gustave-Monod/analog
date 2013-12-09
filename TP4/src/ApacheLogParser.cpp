@@ -83,7 +83,7 @@ LogEntry ApacheLogParser::ParseLine ( )
 	getline( mrInStream, userAgent, '"' );
 	
 	// Si on nous a donné une root URL, on l'ôte si besoin du referer
-	if ( mRootUrl.size() > 0 )
+	if ( mRootUrl.size( ) > 0 )
 	{
 		referer = stripRootUrl( referer );
 	}
@@ -105,9 +105,9 @@ LogEntry ApacheLogParser::ParseLine ( )
 void ApacheLogParser::SetRootUrl ( string const rootUrl )
 {
 	// On ignore un éventuel slash final
-	if ( rootUrl[rootUrl.length() - 1] == '/' )
+	if ( rootUrl[rootUrl.length( ) - 1] == '/' )
 	{
-		mRootUrl = rootUrl.substr( 0, rootUrl.length() - 1 );
+		mRootUrl = rootUrl.substr( 0, rootUrl.length( ) - 1 );
 	}
 	else
 	{
@@ -124,8 +124,7 @@ void ApacheLogParser::SetStripGetParameters ( bool stripGetParameters )
 //-------------------------------------------- Constructeurs - destructeur
 
 ApacheLogParser::ApacheLogParser ( std::istream & inStream )
-		: mrInStream( inStream ), mStripGetParameters( false ),
-		  mRootUrl( "" )
+		: mrInStream( inStream ), mStripGetParameters( false ), mRootUrl( "" )
 {
 #ifdef MAP
 	cout << "Appel au constructeur de <ApacheLogParser>" << endl;
@@ -139,7 +138,6 @@ ApacheLogParser::~ApacheLogParser ( )
 #endif
 } //----- Fin de ~ApacheLogParser
 
-
 //------------------------------------------------------------------ PRIVE
 
 //----------------------------------------------------- Méthodes protégées
@@ -149,7 +147,7 @@ string ApacheLogParser::stripRootUrl ( string const url )
 	if ( result.substr( 0, mRootUrl.length( ) ) == mRootUrl )
 	{
 		result = result.substr( mRootUrl.length( ) );
-		if ( result.length() < 1 )
+		if ( result.length( ) < 1 )
 		{
 			result = "/";
 		}
@@ -173,15 +171,15 @@ string ApacheLogParser::stripGetParameters ( string const uri )
 string ApacheLogParser::stripIndexFilename ( string const uri )
 {
 	string result = uri;
-	size_t position = result.find("index.html");
+	size_t position = result.find( "index.html" );
 	if ( position != string::npos )
 	{
-		result = result.substr(0, position );
+		result = result.substr( 0, position );
 	}
 	position = uri.find( "index.php" );
 	if ( position != string::npos )
 	{
-		result = result.substr(0, position );
+		result = result.substr( 0, position );
 	}
 	return result;
 } //----- Fin de stripIndexFilename

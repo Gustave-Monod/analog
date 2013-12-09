@@ -74,9 +74,9 @@ void testUnitaireLogParser ( )
 void showUsage ( char *pszPath )
 {
 	cerr << "Usage :" << endl << pszPath << " [-hxa] fichierL" << endl
-		 << pszPath << " [-g fichierG] fichierL" << endl << pszPath
-		 << " [-l #] fichierL" << endl << pszPath << " [-t #] fichierL"
-		 << endl << pszPath << " [-n #] fichierL" << endl;
+			<< pszPath << " [-g fichierG] fichierL" << endl << pszPath
+			<< " [-l #] fichierL" << endl << pszPath << " [-t #] fichierL"
+			<< endl << pszPath << " [-n #] fichierL" << endl;
 }
 
 int main ( int argc, char *argv[] )
@@ -101,14 +101,15 @@ int main ( int argc, char *argv[] )
 	stringstream ss;
 	bool argumentIsNumber;
 	int numberHolder;
-	while ( !argumentsNotValid && (thisOption = getopt( argc, argv, OPTIONS )) != -1 )
+	while ( !argumentsNotValid
+			&& ( thisOption = getopt( argc, argv, OPTIONS ) ) != -1 )
 	{
 		thisArgument = "";
 		argumentIsNumber = false;
 		if ( optarg != NULL )
 		{
 			thisArgument = string( optarg );
-			ss.clear();
+			ss.clear( );
 			ss << thisArgument;
 			// On essaie de parser un nombre
 			if ( ss >> numberHolder )
@@ -124,10 +125,11 @@ int main ( int argc, char *argv[] )
 				case 'n':
 					argumentsNotValid = argumentsNotValid || !argumentIsNumber;
 					break;
-				// Options nécessitant un nom de fichier de sortie
+					// Options nécessitant un nom de fichier de sortie
 				case 'g':
-					argumentsNotValid = argumentsNotValid || thisArgument[0] == '-';
-				break;
+					argumentsNotValid = argumentsNotValid
+							|| thisArgument[0] == '-';
+					break;
 			}
 		}
 		
@@ -144,7 +146,7 @@ int main ( int argc, char *argv[] )
 					showHelp = true;
 					break;
 					
-				// Options nécessitant un nombre en argument
+					// Options nécessitant un nombre en argument
 				case 'l':
 					minimumRefererHits = numberHolder;
 					break;
@@ -154,11 +156,11 @@ int main ( int argc, char *argv[] )
 				case 'n':
 					topHitsSizeLimit = numberHolder;
 					break;
-				// Options nécessitant un nom de fichier de sortie
+					// Options nécessitant un nom de fichier de sortie
 				case 'g':
 					graphOutputPath = thisArgument;
 					break;
-				// Autres options
+					// Autres options
 				case 'x':
 					excludeResourceFiles = true;
 					break;
@@ -174,7 +176,7 @@ int main ( int argc, char *argv[] )
 	
 	if ( showHelp )
 	{
-		showUsage ( argv[0] );
+		showUsage( argv[0] );
 		return SUCCESS;
 	}
 	// À part pour -h, on a besoin du nom du fichier de log
@@ -189,12 +191,12 @@ int main ( int argc, char *argv[] )
 	
 	if ( argumentsNotValid )
 	{
-		showUsage ( argv[0] );
+		showUsage( argv[0] );
 		return ERR_ARGS;
 	}
 	
 	// On ouvre le fichier de logs spécifié par l'utilisateur
-	ifstream inStream( pathToLogFile.c_str() );
+	ifstream inStream( pathToLogFile.c_str( ) );
 	inStream >> ws;
 	inStream.peek( );
 	if ( !inStream )
@@ -214,8 +216,8 @@ int main ( int argc, char *argv[] )
 	
 	// Analyse des logs
 	// On récupère ainsi le top N
-	TPriorityQueue & topN = analyser.Analyse();
-	THitsByLink & data = analyser.getData();
+	TPriorityQueue & topN = analyser.Analyse( );
+	THitsByLink & data = analyser.getData( );
 	
 	// Affichage du top N
 	if ( topHitsSizeLimit != 0 )
@@ -224,26 +226,26 @@ int main ( int argc, char *argv[] )
 		// dans une pile, que l'on affiche ensuite
 		stack<string> topNOutput;
 		ostringstream line;
-		while ( !topN.empty() )
+		while ( !topN.empty( ) )
 		{
-			line.str("");
-			line.clear();
-			line << topN.top().first << " (" << topN.top().second  << " hits)";
-			topNOutput.push(line.str());
+			line.str( "" );
+			line.clear( );
+			line << topN.top( ).first << " (" << topN.top( ).second << " hits)";
+			topNOutput.push( line.str( ) );
 			
-			topN.pop();
+			topN.pop( );
 		}
-		while ( !topNOutput.empty() )
+		while ( !topNOutput.empty( ) )
 		{
-			cout << topNOutput.top() << endl;
-			topNOutput.pop();
+			cout << topNOutput.top( ) << endl;
+			topNOutput.pop( );
 		}
 	}
 	
 	// Génération du graphe représentant les parcours (si demandé)
-	if ( graphOutputPath.length() > 0 )
+	if ( graphOutputPath.length( ) > 0 )
 	{
-		GraphGenerator generator;	
+		GraphGenerator generator;
 		ofstream graphOutputStream( graphOutputPath.c_str( ) );
 		if ( graphOutputStream )
 		{
@@ -252,7 +254,8 @@ int main ( int argc, char *argv[] )
 		}
 		else
 		{
-			cerr << "Impossible d'écrire le graphe dans le fichier " << graphOutputPath << endl;
+			cerr << "Impossible d'écrire le graphe dans le fichier "
+					<< graphOutputPath << endl;
 			return ERR_WRITE;
 		}
 	}

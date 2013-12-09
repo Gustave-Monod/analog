@@ -21,14 +21,15 @@ public:
 	// (ils se retrouveront naturellement en bout de file, on pourra les
 	// supprimer d'un simple pop)
 	UriAndHitsGreater ( const bool descending = true )
-	: mDescending( descending )
+			: mDescending( descending )
 	{
 	}
 	
-	bool operator () ( const TUriAndRefererHits & rA, const TUriAndRefererHits &rB ) const
+	bool operator () ( const TUriAndRefererHits & rA,
+			const TUriAndRefererHits &rB ) const
 	{
 		return mDescending ?
-		( rA.second > rB.second ) : ( rA.second < rB.second );
+				( rA.second > rB.second ) : ( rA.second < rB.second );
 	}
 protected:
 	bool mDescending;
@@ -37,6 +38,6 @@ protected:
 // Cette file à priorité contiendra les # URI ayant le plus grand nombre de hits
 // (# varie selon les options données par l'utilisateur)
 typedef std::priority_queue<TUriAndRefererHits, std::vector<TUriAndRefererHits>,
-	UriAndHitsGreater> TPriorityQueue;
+		UriAndHitsGreater> TPriorityQueue;
 
 #endif // LOGANALYSERTYPES_H_

@@ -26,12 +26,12 @@ public:
 
 //------------------------------------------------- Surcharge d'opérateurs
 //-------------------------------------------- Constructeurs - destructeur
-    Date ( std::string const & dateString );
-    // Mode d'emploi :
-    // Construit un objet date.
-    // Contrat :
-    // La chaine doit être formatée comme suit :
-    // 08/Sep/2012:11:15:00 +0200
+	Date ( std::string const & dateString );
+	// Mode d'emploi :
+	// Construit un objet date.
+	// Contrat :
+	// La chaine doit être formatée comme suit :
+	// 08/Sep/2012:11:15:00 +0200
 
 //------------------------------------------------------------------ PRIVE 
 protected:

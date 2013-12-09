@@ -46,9 +46,9 @@ public:
 	// Paramétrage de ApacheLogParser
 	void SetRootUrl ( std::string const rootUrl );
 	void SetStripGetParameters ( bool stripGetParameters );
-	
-//------------------------------------------------- Surcharge d'opérateurs
 
+//------------------------------------------------- Surcharge d'opérateurs
+	
 //-------------------------------------------- Constructeurs - destructeur
 
 	ApacheLogParser ( std::istream & inStream );
@@ -87,7 +87,7 @@ protected:
 	
 //----------------------------------------------------- Attributs protégés
 	std::istream &mrInStream;
-	
+
 	// Indique si l'on doit supprimer tous les paramètres GET des URIs
 	bool mStripGetParameters;
 	// Permet de considérer que /page.html est la même que mRootUrl + "page.html"

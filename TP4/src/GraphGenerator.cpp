@@ -12,7 +12,8 @@ using namespace std;
 
 //----------------------------------------------------------------- PUBLIC
 //----------------------------------------------------- Méthodes publiques
-void GraphGenerator::GenerateGraphTo ( THitsByLink const & data, ostream & outputStream )
+void GraphGenerator::GenerateGraphTo ( THitsByLink const & data,
+		ostream & outputStream )
 {
 	set<string> existingNodes;
 	
@@ -21,7 +22,8 @@ void GraphGenerator::GenerateGraphTo ( THitsByLink const & data, ostream & outpu
 	
 	// Pour chaque couple (URI <- Referer, #hits)
 	string currentUri, currentReferer, currentLabel;
-	for ( THitsByLink::const_iterator it = data.begin(); it != data.end(); ++it)
+	for ( THitsByLink::const_iterator it = data.begin( ); it != data.end( );
+			++it )
 	{
 		currentUri = it->first.Uri;
 		currentReferer = it->first.Referer;
@@ -47,7 +49,9 @@ void GraphGenerator::GenerateGraphTo ( THitsByLink const & data, ostream & outpu
 		}
 		
 		// On représente ce lien (arrête entre deux noeuds)
-		outputStream << getEdgeDeclarationLine( currentReferer, currentUri, currentLabel );
+		outputStream
+				<< getEdgeDeclarationLine( currentReferer, currentUri,
+						currentLabel );
 	}
 	// Fin du graphe
 	outputStream << "}" << endl;
@@ -58,36 +62,35 @@ void GraphGenerator::GenerateGraphTo ( THitsByLink const & data, ostream & outpu
 GraphGenerator::GraphGenerator ( )
 {
 #ifdef MAP
-    cout << "Appel au constructeur de <GraphGenerator>" << endl;
+	cout << "Appel au constructeur de <GraphGenerator>" << endl;
 #endif
 } //----- Fin de GraphGenerator
 
 GraphGenerator::~GraphGenerator ( )
 {
 #ifdef MAP
-    cout << "Appel au destructeur de <GraphGenerator>" << endl;
+	cout << "Appel au destructeur de <GraphGenerator>" << endl;
 #endif
 } //----- Fin de ~GraphGenerator
 
 //------------------------------------------------------------------ PRIVE
-string GraphGenerator::getNodeDeclarationLine( string const nodeName )
+string GraphGenerator::getNodeDeclarationLine ( string const nodeName )
 {
 	stringstream declaration;
-	declaration <<  "\"" << nodeName << "\";" << endl;
-	return declaration.str();
+	declaration << "\"" << nodeName << "\";" << endl;
+	return declaration.str( );
 } //----- Fin de getNodeDeclarationLine
 
-string GraphGenerator::getEdgeDeclarationLine( string const source,
-						string const destination, string const label )
+string GraphGenerator::getEdgeDeclarationLine ( string const source,
+		string const destination, string const label )
 {
 	stringstream declaration;
-	declaration <<  "\"" << source << "\" -> "
-				<<  "\"" << destination << "\"";
-	if ( label.length() > 0 )
+	declaration << "\"" << source << "\" -> " << "\"" << destination << "\"";
+	if ( label.length( ) > 0 )
 	{
-		declaration <<  "[label=\"" << label << "\"]";
+		declaration << "[label=\"" << label << "\"]";
 	}
 	declaration << ";" << endl;
-	return declaration.str();
+	return declaration.str( );
 } //----- Fin de getEdgeDeclarationLine
 //----------------------------------------------------- Méthodes protégées
