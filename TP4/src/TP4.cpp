@@ -194,7 +194,7 @@ int main ( int argc, char *argv[] )
 	}
 	
 	// On ouvre le fichier de logs spécifié par l'utilisateur
-	ifstream inStream( pathToLogFile );
+	ifstream inStream( pathToLogFile.c_str() );
 	inStream >> ws;
 	inStream.peek( );
 	if ( !inStream )
@@ -244,7 +244,7 @@ int main ( int argc, char *argv[] )
 	if ( graphOutputPath.length() > 0 )
 	{
 		GraphGenerator generator;	
-		ofstream graphOutputStream( graphOutputPath );
+		ofstream graphOutputStream( graphOutputPath.c_str( ) );
 		if ( graphOutputStream )
 		{
 			generator.GenerateGraphTo( data, graphOutputStream );

@@ -28,7 +28,9 @@ void GraphGenerator::GenerateGraphTo ( THitsByLink const & data, ostream & outpu
 		currentLabel = "";
 		if ( it->second > 1 )
 		{
-			currentLabel = to_string( it->second );
+			stringstream converter;
+			converter << it->second;
+			currentLabel = converter.str( );
 		}
 		
 		// Si on n'avat pas encore croisé cette URI ou ce referer,
